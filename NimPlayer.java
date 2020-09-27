@@ -1,10 +1,88 @@
-public class NimPlayer
-{
-    /**
-     * Empty Constructor
-     */
-    public NimPlayer()
-    {
-        // make sure to put your assignment 1 code in here and work from there
+/*
+    SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
+    PERIOD: SEMESTER 2 2020
+    ASSIGNMENT: ASSIGNMENT 1
+    FULL NAME: KELVIN LIM WAN
+    STUDENT NUMBER: 929715
+    CANVAS USERNAME: KELVINL3
+ */
+
+public class NimPlayer {
+
+    // instance variables
+    private final String username;
+    private String familyname;
+    private String givenname;
+    private int games;
+    private int wins;
+    private int remove;
+
+    // constructors
+    public NimPlayer() {
+        username = "";
+        familyname = "";
+        givenname = "";
+        games = 0;
+        wins = 0;
+        remove = 1;
+    }
+
+    public NimPlayer(String username, String familyname, String givenname) {
+        this.username = username;
+        this.familyname = familyname;
+        this.givenname = givenname;
+        wins = 0;
+        games = 0;
+        remove = 1;
+    }
+
+    // getter methods
+    public String getUsername() {
+        return username;
+    }
+    public String getFamilyname() {
+        return familyname;
+    }
+    public String getGivennname() {
+        return givenname;
+    }
+    public int getGames() {
+        return games;
+    }
+    public int getWins() {
+        return wins;
+    }
+    public int removeStone() {
+        return remove;
+    }
+
+    // setter methods
+    public void setFamilyname(String familyname) {
+        this.familyname = familyname;
+    }
+    public void setGivenname(String givenname) {
+        this.givenname = givenname;
+    }
+    public void setGames(int games) {
+        this.games = games;
+    }
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+    public void toRemove(int remove) {
+        this.remove = remove;
+    }
+
+    // return true if the two players have same username, family name, given name, games and wins; return false otherwise
+    public boolean equals(NimPlayer player) {
+        return username.equals(player.getUsername()) && familyname.equals(player.getFamilyname()) &&
+                givenname.equals(player.getGivennname()) && games == player.getGames() &&
+                wins == player.getWins();
+    }
+
+    // display the player's game statistics
+    public String toString() {
+        return username + ", " + givenname + ", " + familyname + ", " + games + " games, " + wins +
+                " wins";
     }
 }
