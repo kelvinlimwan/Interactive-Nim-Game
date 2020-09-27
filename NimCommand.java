@@ -24,7 +24,12 @@ public class NimCommand {
     }
 
     public String[] getParameterList() {
-        return parameterList;
+        String[] output = new String[parameterList.length];
+        for (int i = 0; i < parameterList.length; i++) {
+            output[i] = parameterList[i];
+        }
+        return output;
+
     }
 
     // setters

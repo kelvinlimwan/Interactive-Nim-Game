@@ -9,6 +9,9 @@
 
 public class NimPlayer {
 
+    // constant variable
+    private static final int MIN_FOR_TWO_DIGITS_REP = 10;
+
     // instance variables
     private final String username;
     private String familyname;
@@ -18,15 +21,6 @@ public class NimPlayer {
     private int remove;
 
     // constructors
-    public NimPlayer() {
-        username = "";
-        familyname = "";
-        givenname = "";
-        games = 0;
-        wins = 0;
-        remove = 1;
-    }
-
     public NimPlayer(String username, String familyname, String givenname) {
         this.username = username;
         this.familyname = familyname;
@@ -71,6 +65,29 @@ public class NimPlayer {
     }
     public void toRemove(int remove) {
         this.remove = remove;
+    }
+
+    public String fullname() {
+        return givenname + " " + familyname;
+    }
+
+    public double winRatio() {
+        if (games != 0) {
+            return (double) wins / games * 100;
+        }
+        return 0;
+    }
+
+    public String roundWinRatioRep() {
+        return Math.round(winRatio()) + "%";
+    }
+
+    public String twoDigitGamesRep() {
+        if (games < MIN_FOR_TWO_DIGITS_REP) {
+            return "0" + games;
+        } else {
+            return Integer.toString(games);
+        }
     }
 
     // return true if the two players have same username, family name, given name, games and wins; return false otherwise

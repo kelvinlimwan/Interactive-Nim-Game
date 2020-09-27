@@ -8,6 +8,8 @@
 */
 
 import java.util.Scanner;
+import java.util.StringTokenizer;
+import java.util.NoSuchElementException;
 
 public class Nimsys {
 
@@ -25,7 +27,8 @@ public class Nimsys {
     }
 
     // constant variable
-    private static final int MIN_STONES_TO_REMOVE = 1;
+    private static final int PLAYERS_COLLECTION_CAPACITY = 100;
+    private static final int MAX_PLAYERS_TO_DISPLAY = 10;
 
     // instance variables
     private NimPlayer[] playersCollection;
@@ -33,7 +36,7 @@ public class Nimsys {
 
     // constructor
     public Nimsys() {
-        playersCollection = new NimPlayer[100];
+        playersCollection = new NimPlayer[PLAYERS_COLLECTION_CAPACITY];
         playersCount = 0;
     }
 
@@ -43,46 +46,53 @@ public class Nimsys {
         while (true) {
             System.out.println();
 
-            // get user command
-            System.out.print("$ ");
-            String command = keyboard.next();
+            try {
+                // get user command
+                System.out.print("$ ");
+                String command = keyboard.next();
 
-            switch (command) {
-                case "exit":
-                    return;  // terminate application operations naturally
-                case "addplayer":
-                    system.addPlayer(keyboard);
-                    break;
-                case "addaiplayer":
-                    system.addAIPlayer();
-                    break;
-                case "removeplayer":
-                    system.removePlayer(keyboard);
-                    break;
-                case "editplayer":
-                    system.editPlayer(keyboard);
-                    break;
-                case "resetstats":
-                    system.resetStats(keyboard);
-                    break;
-                case "displayplayer":
-                    system.displayPlayer(keyboard);
-                    break;
-                case "rankings":
-                    system.rankings();
-                    break;
-                case "startgame":
-                    system.startGame(keyboard);
-                    break;
-                case "startadvancedgame":
-                    system.startAdvancedGame(keyboard);
-                    break;
-                case "commands":
-                    system.commands();
-                    break;
-                case "help":
-                    system.help();
-                    break;
+                switch (command) {
+                    case "exit":
+                        system.exit();
+                        return;  // terminate application operations naturally
+                    case "addplayer":
+                        system.addPlayer(keyboard);
+                        break;
+                    case "addaiplayer":
+                        system.addAIPlayer();
+                        break;
+                    case "removeplayer":
+                        system.removePlayer(keyboard);
+                        break;
+                    case "editplayer":
+                        system.editPlayer(keyboard);
+                        break;
+                    case "resetstats":
+                        system.resetStats(keyboard);
+                        break;
+                    case "displayplayer":
+                        system.displayPlayer(keyboard);
+                        break;
+                    case "rankings":
+                        system.rankings(keyboard);
+                        break;
+                    case "startgame":
+                        system.startGame(keyboard);
+                        break;
+                    case "startadvancedgame":
+                        system.startAdvancedGame(keyboard);
+                        break;
+                    case "commands":
+                        system.commands();
+                        break;
+                    case "help":
+                        system.help();
+                        break;
+                    default:
+                        throw new Exception("'" + command + "' is not a valid command.");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -99,18 +109,38 @@ public class Nimsys {
         }
         System.out.println(playersCount);
         */
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        String username = null;  // to keep compiler happy
+        String familyname = null;
+        String givenname = null;
+        try {
+            username = arguments.nextToken();
+            familyname = arguments.nextToken();
+            givenname = arguments.nextToken();
+        } catch (NoSuchElementException nsee) {
+            System.out.println("Incorrect number of arguments supplied to command.");
+            return;
+        }
 
-        String username = keyboard.next();
-        String familyname = keyboard.next();
-        String givenname = keyboard.next();
-        // check if username already exists
+        // check if username already exists and set index according to alphabetical order
+        int index = 0;
         for (int i = 0; i < playersCount; i++) {
             if (username.equals(playersCollection[i].getUsername())) {
                 System.out.println("The player already exists.");
                 return;
+            } else if (username.compareTo(playersCollection[i].getUsername()) > 0) {
+                index++;
+            } else {
+                break;
             }
         }
-        playersCollection[playersCount] = new NimPlayer(username, familyname, givenname);
+
+        // rearrange players higher in alphabetical order than new player
+        for (int i = playersCount; i > index; i--) {
+            playersCollection[i] = playersCollection[i-1];
+        }
+
+        playersCollection[index] = new NimPlayer(username, familyname, givenname);
         playersCount++;
 
         /*
@@ -179,9 +209,19 @@ public class Nimsys {
     }
 
     private void editPlayer(Scanner keyboard) {
-        String username = keyboard.next();
-        String newFamilyname = keyboard.next();
-        String newGivenname = keyboard.next();
+
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        String username = null;  // to keep compiler happy
+        String newFamilyname = null;
+        String newGivenname = null;
+        try {
+            username = arguments.nextToken();
+            newFamilyname = arguments.nextToken();
+            newGivenname = arguments.nextToken();
+        } catch (NoSuchElementException nsee) {
+            System.out.println("Incorrect number of arguments supplied to command.");
+            return;
+        }
 
         for (int i = 0; i < playersCount; i++) {
             if (username.equals(playersCollection[i].getUsername())) {
@@ -236,100 +276,107 @@ public class Nimsys {
         }
     }
 
-    private void rankings() {
-        // TODO: add code
-    }
+    private void rankings(Scanner keyboard) {
+        String order = keyboard.nextLine().trim();
 
-    // TODO: modify code
-    // trigger the start of the game
-    private void startGame(Scanner keyboard) {
-        /*
-        // get player names and create respective instances of NimPlayer class
-        System.out.print("Please enter Player 1's name : ");
-        NimPlayer player1 = new NimPlayer(keyboard.next());
-        System.out.print("Please enter Player 2's name : ");
-        NimPlayer player2 = new NimPlayer(keyboard.next());
+        NimPlayer[] ranks = new NimPlayer[Math.min(playersCount, MAX_PLAYERS_TO_DISPLAY)];
 
-        int upperBound;
-        int numStonesLeft;
-        int numGamesPlayed = 0;
-        int player1Wins = 0;
-        int player2Wins = 0;
-        // repeat game until user decides not to continue
-        while (true) {
-            numGamesPlayed++;  // increment number of games played
-
-            // get round specifications
-            System.out.print("Enter upper bound : ");
-            upperBound = keyboard.nextInt();
-            System.out.print("Enter initial number of stones : ");
-            numStonesLeft = keyboard.nextInt();
-            System.out.println();
-
-            NimPlayer currentPlayer = player1;
-            // repeat removal of stones until all stones are removed
-            while (numStonesLeft > 0) {
-                // display number of stones left, represented by asterisks
-                System.out.print(numStonesLeft + " stones left :");
-                for (int i = 0; i < numStonesLeft; i++) {
-                    System.out.print(" *");
-                }
-                System.out.println();
-
-                // deduct stones to remove from numStones when valid number is given
-                while (true) {
-                    System.out.print(currentPlayer.getName() +
-                            "'s turn. Enter stones to remove : ");
-                    currentPlayer.toRemove(keyboard.nextInt());
-
-                    if (currentPlayer.removeStone() > upperBound) {
-                        System.out.println("Upper bound limit exceed, " +
-                                "upper bound maximum choice is " + upperBound + "\n");
-                    } else if (currentPlayer.removeStone() > numStonesLeft ||
-                            currentPlayer.removeStone() < MIN_STONES_TO_REMOVE) {
-                        System.out.println("Invalid attempt, only " + numStonesLeft +
-                                " stones remaining! Try again:\n");
-                    } else {
-                        numStonesLeft -= currentPlayer.removeStone();
-                        System.out.println();
-                        break;
+        if (order.equals("asc")) {
+            // loop for every entry in ranks
+            for (int i = 0; i < ranks.length; i++) {
+                // loop for all players in playersCollection
+                NimPlayer ithPlayer = null;
+                double minWinRatio = Double.MAX_VALUE;
+                for (int j = 0; j < playersCount; j++) {
+                    if (playersCollection[j].winRatio() < minWinRatio) {
+                        // check if jth player is not in ranks
+                        boolean newPlayer = true;
+                        for (int k = 0; k < i; k++){
+                            if (playersCollection[j].equals(ranks[k])) {
+                                newPlayer = false;
+                                break;
+                            }
+                        }
+                        // if jth player is not in ranks
+                        if (newPlayer) {
+                            ithPlayer = playersCollection[j];
+                            minWinRatio = playersCollection[j].winRatio();
+                        }
                     }
                 }
-
-                // switch currentPlayer for next turn
-                if (currentPlayer.equals(player1)) {
-                    currentPlayer = player2;
-                } else {
-                    currentPlayer = player1;
+                ranks[i] = ithPlayer;
+            }
+        } else {
+            // loop for every entry in ranks
+            for (int i = 0; i < ranks.length; i++) {
+                // loop for all players in playersCollection
+                NimPlayer ithPlayer = null;
+                double maxWinRatio = -Double.MAX_VALUE;
+                for (int j = 0; j < playersCount; j++) {
+                    if (playersCollection[j].winRatio() > maxWinRatio) {
+                        // check if jth player is not in ranks
+                        boolean newPlayer = true;
+                        for (int k = 0; k < i; k++){
+                            if (playersCollection[j].equals(ranks[k])) {
+                                newPlayer = false;
+                                break;
+                            }
+                        }
+                        // if jth player is not in ranks
+                        if (newPlayer) {
+                            ithPlayer = playersCollection[j];
+                            maxWinRatio = playersCollection[j].winRatio();
+                        }
+                    }
                 }
-            }
-
-            System.out.println("Game Over");
-            System.out.println(currentPlayer.getName() + " wins!\n");
-
-            // set number of wins for winning player
-            if (currentPlayer.equals(player1)) {
-                player1.setWins(++player1Wins);
-            } else {
-                player2.setWins(++player2Wins);
-            }
-
-            // set number of games played for both players
-            player1.setGames(numGamesPlayed);
-            player2.setGames(numGamesPlayed);
-
-            // get user decision after round
-            System.out.print("Do you want to play again (Y/N): ");
-            String answer = keyboard.next();
-
-            // when user does not want to play again, end game and display players' statistics
-            if (! answer.equals("Y")) {
-                System.out.println(player1);
-                System.out.println(player2);
-                break;
+                ranks[i] = ithPlayer;
             }
         }
-         */
+
+        for (NimPlayer player: ranks) {
+            System.out.printf("%-5s| %s games | %s\n", player.roundWinRatioRep(),
+                    player.twoDigitGamesRep(), player.fullname());
+        }
+    }
+
+    // trigger the start of the game
+    private void startGame(Scanner keyboard) {
+
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        int initNumStones = 0;  // to keep compiler happy
+        int upperBound = 0;
+        String username1 = null;
+        String username2 = null;
+        try {
+            initNumStones = Integer.parseInt(arguments.nextToken());
+            upperBound = Integer.parseInt(arguments.nextToken());
+            username1 = arguments.nextToken();
+            username2 = arguments.nextToken();
+        } catch (NoSuchElementException nsee) {
+            System.out.println("Incorrect number of arguments supplied to command.");
+            return;
+        }
+
+        NimPlayer player1 = null;
+        NimPlayer player2 = null;
+        boolean exist1 = false;
+        boolean exist2 = false;
+        for (int i = 0; i < playersCount; i++) {
+            if (username1.equals(playersCollection[i].getUsername())) {
+                exist1 = true;
+                player1 = playersCollection[i];
+            } else if (username2.equals(playersCollection[i].getUsername())) {
+                exist2 = true;
+                player2 = playersCollection[i];
+            }
+        }
+
+        if (exist1 && exist2) {
+            NimGame game = new NimGame(initNumStones, upperBound, player1, player2);
+            game.play(keyboard);
+        } else {
+            System.out.println("One of the players does not exist");
+        }
     }
 
     private void startAdvancedGame(Scanner keyboard) {
