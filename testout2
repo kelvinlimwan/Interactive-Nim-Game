@@ -1,0 +1,55 @@
+Welcome to Nim
+
+Please enter a command to continue or type 'help' for more information
+
+$ 'createplayer' is not a valid command.
+
+$ Incorrect number of arguments supplied to command.
+
+$ 
+$ 
+Initial stone count: 10
+Maximum stone removal: 3
+Player 1: Han Solo
+Player 2: R2 D2
+
+10 stones left: * * * * * * * * * *
+Han's turn - remove how many?
+
+7 stones left: * * * * * * *
+R2's turn - remove how many?
+
+5 stones left: * * * * *
+Han's turn - remove how many?
+
+3 stones left: * * *
+R2's turn - remove how many?
+
+1 stones left: *
+Han's turn - remove how many?
+
+Invalid move. You must remove between 1 and 1 stones.
+
+1 stones left: *
+Han's turn - remove how many?
+
+Game Over
+R2 D2 wins!
+
+$ artoo, R2, D2, 1 games, 1 wins
+hsolo, Han, Solo, 2 games, 0 wins
+lskywalker, Laurence, Skywalker, 1 games, 1 wins
+
+$ 100% | 01 games | R2 D2
+100% | 01 games | Laurence Skywalker
+0%   | 02 games | Han Solo
+
+$ 0%   | 02 games | Han Solo
+100% | 01 games | R2 D2
+100% | 01 games | Laurence Skywalker
+
+$ 100% | 01 games | R2 D2
+100% | 01 games | Laurence Skywalker
+0%   | 02 games | Han Solo
+
+$ 

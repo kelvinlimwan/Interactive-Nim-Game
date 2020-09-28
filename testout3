@@ -1,0 +1,87 @@
+Welcome to Nim
+
+Please enter a command to continue or type 'help' for more information
+
+$ Type 'commands' to list all available commands
+Type 'startgame' to play game
+The player that removes the last stone loses!
+
+$ artoo, R2, D2, 1 games, 1 wins
+hsolo, Han, Solo, 2 games, 0 wins
+lskywalker, Laurence, Skywalker, 1 games, 1 wins
+
+$ artoo, R2, D2, 1 games, 1 wins
+
+$ 
+Initial stone count: 10
+Stones display: <1,*> <2,*> <3,*> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+Player 1: Laurence Skywalker
+Player 2: R2 D2
+
+10 stones left: <1,*> <2,*> <3,*> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+Laurence's turn - which to remove?
+
+8 stones left: <1,*> <2,*> <3,x> <4,x> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+R2's turn - which to remove?
+
+6 stones left: <1,*> <2,*> <3,x> <4,x> <5,*> <6,x> <7,x> <8,*> <9,*> <10,*>
+Laurence's turn - which to remove?
+
+4 stones left: <1,x> <2,x> <3,x> <4,x> <5,*> <6,x> <7,x> <8,*> <9,*> <10,*>
+R2's turn - which to remove?
+
+2 stones left: <1,x> <2,x> <3,x> <4,x> <5,*> <6,x> <7,x> <8,x> <9,x> <10,*>
+Laurence's turn - which to remove?
+
+1 stones left: <1,x> <2,x> <3,x> <4,x> <5,x> <6,x> <7,x> <8,x> <9,x> <10,*>
+R2's turn - which to remove?
+
+Game Over
+R2 D2 wins!
+
+$ 100% | 02 games | R2 D2
+50%  | 02 games | Laurence Skywalker
+0%   | 02 games | Han Solo
+
+$ 
+Initial stone count: 10
+Stones display: <1,*> <2,*> <3,*> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+Player 1: Han Solo
+Player 2: R2 D2
+
+10 stones left: <1,*> <2,*> <3,*> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+Han's turn - which to remove?
+
+Invalid move.
+
+10 stones left: <1,*> <2,*> <3,*> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+Han's turn - which to remove?
+
+Invalid move.
+
+10 stones left: <1,*> <2,*> <3,*> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+Han's turn - which to remove?
+
+8 stones left: <1,*> <2,x> <3,x> <4,*> <5,*> <6,*> <7,*> <8,*> <9,*> <10,*>
+R2's turn - which to remove?
+
+6 stones left: <1,*> <2,x> <3,x> <4,*> <5,*> <6,x> <7,x> <8,*> <9,*> <10,*>
+Han's turn - which to remove?
+
+4 stones left: <1,*> <2,x> <3,x> <4,x> <5,x> <6,x> <7,x> <8,*> <9,*> <10,*>
+R2's turn - which to remove?
+
+2 stones left: <1,*> <2,x> <3,x> <4,x> <5,x> <6,x> <7,x> <8,x> <9,x> <10,*>
+Han's turn - which to remove?
+
+1 stones left: <1,x> <2,x> <3,x> <4,x> <5,x> <6,x> <7,x> <8,x> <9,x> <10,*>
+R2's turn - which to remove?
+
+Game Over
+R2 D2 wins!
+
+$ 100% | 03 games | R2 D2
+50%  | 02 games | Laurence Skywalker
+0%   | 03 games | Han Solo
+
+$ 

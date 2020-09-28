@@ -24,9 +24,14 @@ public class NimCommand {
 
     public NimCommand(String command, String[] parameterList) {
         this.command = command;
-        this.parameterList = new String[parameterList.length];
-        for (int i = 0; i < parameterList.length; i++) {
-            this.parameterList[i] = parameterList[i];
+        if (parameterList == null) {
+            this.parameterList = null;
+        }
+        else {
+            this.parameterList = new String[parameterList.length];
+            for (int i = 0; i < parameterList.length; i++) {
+                this.parameterList[i] = parameterList[i];
+            }
         }
     }
 
@@ -36,6 +41,10 @@ public class NimCommand {
     }
 
     public String[] getParameterList() {
+        if (parameterList == null) {
+            System.out.println("No parameters");
+            return new String[] {};
+        }
         String[] output = new String[parameterList.length];
         for (int i = 0; i < parameterList.length; i++) {
             output[i] = parameterList[i];
@@ -50,6 +59,10 @@ public class NimCommand {
     }
 
     public void setParameterList(String[] parameterList) {
+        if (parameterList == null) {
+            System.out.println("No parameters");
+            return;
+        }
         this.parameterList = new String[parameterList.length];
         for (int i = 0; i < parameterList.length; i++) {
             this.parameterList[i] = parameterList[i];
@@ -60,7 +73,7 @@ public class NimCommand {
         String output = String.format("%-18s", command);
 
         if (parameterList == null) {
-            output += "(no parameter)";
+            output += "(no parameters)";
         } else {
             for (int i = 0; i < parameterList.length; i++) {
                 if (i == 0) {

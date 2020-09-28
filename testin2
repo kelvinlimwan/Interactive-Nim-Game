@@ -1,0 +1,14 @@
+createplayer lskyrunner, Skyrunner, Luke
+addplayer lskyrunner
+addaiplayer artoo, D2, R2
+startgame 10, 3, hsolo, artoo
+3
+2
+3
+1
+displayplayer
+rankings
+rankings asc
+rankings desc
+exit
+

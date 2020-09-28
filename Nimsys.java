@@ -119,13 +119,6 @@ public class Nimsys {
     }
 
     private void addPlayer(Scanner keyboard) {
-        /*
-        // TRACING: print players and count BEFORE
-        for (int i = 0; i < playersCount; i++) {
-            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
-        }
-        System.out.println(playersCount);
-        */
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
         String username = null;  // to keep compiler happy
         String familyname = null;
@@ -159,24 +152,9 @@ public class Nimsys {
 
         playersCollection[index] = new NimHumanPlayer(username, familyname, givenname);
         playersCount++;
-
-        /*
-        // TRACING: print player and count AFTER
-        for (int i = 0; i < playersCount; i++) {
-            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
-        }
-        System.out.println(playersCount);
-         */
     }
 
     private void addAIPlayer(Scanner keyboard) {
-        /*
-        // TRACING: print players and count BEFORE
-        for (int i = 0; i < playersCount; i++) {
-            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
-        }
-        System.out.println(playersCount);
-        */
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
         String username = null;  // to keep compiler happy
         String familyname = null;
@@ -210,26 +188,9 @@ public class Nimsys {
 
         playersCollection[index] = new NimAIPlayer(username, familyname, givenname);
         playersCount++;
-
-        /*
-        // TRACING: print player and count AFTER
-        for (int i = 0; i < playersCount; i++) {
-            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
-        }
-        System.out.println(playersCount);
-         */
     }
 
     private void removePlayer(Scanner keyboard) {
-
-        /*
-        // TRACING: print players and count BEFORE
-        for (int i = 0; i < playersCount; i++) {
-            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
-        }
-        System.out.println(playersCount);
-         */
-
         String username = keyboard.nextLine().trim();
         if (username.isEmpty()) {
             System.out.println("Are you sure you want to remove all players? (y/n)");
@@ -262,14 +223,6 @@ public class Nimsys {
                 System.out.println("The player does not exist.");
             }
         }
-
-        /*
-        // TRACING: print players and count AFTER
-        for (int i = 0; i < playersCount; i++) {
-            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
-        }
-        System.out.println(playersCount);
-         */
     }
 
     private void editPlayer(Scanner keyboard) {
@@ -452,20 +405,19 @@ public class Nimsys {
         // create an array containing all commands of type NimCommand
         NimCommand[] commands = new NimCommand[12];
         commands[0] = new NimCommand("exit");
-        commands[1] = new NimCommand("addplayer", new String[] {"username", "family name",
-                "given name"});
-        commands[2] = new NimCommand("addaiplayer", new String[] {"username",
-                "family name", "given name"});
-        commands[3] = new NimCommand("removeplayer", new String[] {"optional username"});
-        commands[4] = new NimCommand("editplayer", new String[] {"username",
-                "new family name", "new given name"});
+        commands[1] = new NimCommand("addplayer", new String[] {"username", "secondname",
+                "firstname"});
+        commands[2] = new NimCommand("addaiplayer", new String[] {"username", "secondname",
+                "firstname"});
+        commands[3] = new NimCommand("removeplayer", new String[] {"username"});
+        commands[4] = new NimCommand("editplayer", new String[] {"username", "secondname",
+                "firstname"});
         commands[5] = new NimCommand("resetstats", new String[] {"optional username"});
         commands[6] = new NimCommand("displayplayer", new String[] {"optional username"});
-        commands[7] = new NimCommand("rankings", new String[] {"optional asc or desc"});
-        commands[8] = new NimCommand("startgame", new String[] {"initial number of stones",
-                "upper bound", "username1", "username2"});
-        commands[9] = new NimCommand("startadvancedgame", new String[] {"initial number " +
-                "of stones", "username 1", "username 2"});
+        commands[7] = new NimCommand("rankings", new String[] {"optional asc"});
+        commands[8] = new NimCommand("startgame", new String[] {"username1", "username2"});
+        commands[9] = new NimCommand("startadvancedgame", new String[] {"username1",
+                "username2"});
         commands[10] = new NimCommand("commands");
         commands[11] = new NimCommand("help");
 
