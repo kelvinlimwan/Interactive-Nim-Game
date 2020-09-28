@@ -68,45 +68,33 @@ public class Nimsys {
                 System.out.print("$ ");
                 String command = keyboard.next();
 
-                switch (command) {
-                    case "exit":
-                        system.exit();
-                        return;  // terminate application operations naturally
-                    case "addplayer":
-                        system.addPlayer(keyboard);
-                        break;
-                    case "addaiplayer":
-                        system.addAIPlayer(keyboard);
-                        break;
-                    case "removeplayer":
-                        system.removePlayer(keyboard);
-                        break;
-                    case "editplayer":
-                        system.editPlayer(keyboard);
-                        break;
-                    case "resetstats":
-                        system.resetStats(keyboard);
-                        break;
-                    case "displayplayer":
-                        system.displayPlayer(keyboard);
-                        break;
-                    case "rankings":
-                        system.rankings(keyboard);
-                        break;
-                    case "startgame":
-                        system.startGame(keyboard);
-                        break;
-                    case "startadvancedgame":
-                        system.startAdvancedGame(keyboard);
-                        break;
-                    case "commands":
-                        system.commands();
-                        break;
-                    case "help":
-                        system.help();
-                        break;
-                    default:
-                        throw new Exception("'" + command + "' is not a valid command.");
+                if (command.equals("exit")) {
+                    system.exit();
+                    break;  // terminate application operations naturally
+                } else if (command.equals("addplayer")) {
+                    system.addPlayer(keyboard);
+                } else if (command.equals("addaiplayer")) {
+                    system.addAIPlayer(keyboard);
+                } else if (command.equals("removeplayer")) {
+                    system.removePlayer(keyboard);
+                } else if (command.equals("editplayer")) {
+                    system.editPlayer(keyboard);
+                } else if (command.equals("resetstats")) {
+                    system.resetStats(keyboard);
+                } else if (command.equals("displayplayer")) {
+                    system.displayPlayer(keyboard);
+                } else if (command.equals("rankings")) {
+                    system.rankings(keyboard);
+                } else if (command.equals("startgame")) {
+                    system.startGame(keyboard);
+                } else if (command.equals("startadvancedgame")) {
+                    system.startAdvancedGame(keyboard);
+                } else if (command.equals("commands")) {
+                    system.commands();
+                } else if (command.equals("help")) {
+                    system.help();
+                } else {
+                    throw new Exception("'" + command + "' is not a valid command.");
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
