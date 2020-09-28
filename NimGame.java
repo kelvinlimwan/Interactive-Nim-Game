@@ -23,10 +23,7 @@ public class NimGame {
 
     //constructors
     public NimGame() {
-        numStonesLeft = 0;
-        upperBound = 0;
-        player1 = null;
-        player2 = null;
+        this(0, 0, null, null);
     }
 
     public NimGame(int numStonesLeft, int upperBound, NimPlayer player1, NimPlayer player2) {

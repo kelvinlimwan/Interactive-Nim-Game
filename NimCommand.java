@@ -15,13 +15,11 @@ public class NimCommand {
 
     // constructors
     public NimCommand() {
-        command = null;
-        parameterList = null;
+        this(null, null);
     }
 
     public NimCommand(String command) {
-        this.command = command;
-        parameterList = null;
+        this(command, null);
     }
 
     public NimCommand(String command, String[] parameterList) {

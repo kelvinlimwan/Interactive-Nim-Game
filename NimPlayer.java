@@ -21,9 +21,7 @@ public abstract class NimPlayer {
 
     // constructors
     public NimPlayer() {
-        username = null;
-        familyname = null;
-        givenname = null;
+        this(null, null, null);
         games = 0;
         wins = 0;
     }
