@@ -31,13 +31,30 @@ public class Nimsys {
     private static final int MAX_PLAYERS_TO_DISPLAY = 10;
 
     // instance variables
-    private NimPlayer[] playersCollection;
+    private final NimPlayer[] playersCollection;
     private int playersCount;
 
     // constructor
     public Nimsys() {
         playersCollection = new NimPlayer[PLAYERS_COLLECTION_CAPACITY];
         playersCount = 0;
+    }
+
+    // getters
+    public NimPlayer[] getPlayersCollection() {
+        NimPlayer[] output = new NimPlayer[playersCount];
+        for (int i = 0; i < playersCount; i++) {
+            output[i] = playersCollection[i];
+        }
+        return output;
+    }
+    public int getPlayersCount() {
+        return playersCount;
+    }
+
+    // setter
+    public void setPlayersCount(int playersCount) {
+        this.playersCount = playersCount;
     }
 
     // command-line input console
@@ -59,7 +76,7 @@ public class Nimsys {
                         system.addPlayer(keyboard);
                         break;
                     case "addaiplayer":
-                        system.addAIPlayer();
+                        system.addAIPlayer(keyboard);
                         break;
                     case "removeplayer":
                         system.removePlayer(keyboard);
@@ -98,7 +115,7 @@ public class Nimsys {
     }
 
     private void exit() {
-        // for file (player.dat)
+        // TODO: for file (player.dat)
     }
 
     private void addPlayer(Scanner keyboard) {
@@ -140,7 +157,7 @@ public class Nimsys {
             playersCollection[i] = playersCollection[i-1];
         }
 
-        playersCollection[index] = new NimPlayer(username, familyname, givenname);
+        playersCollection[index] = new NimHumanPlayer(username, familyname, givenname);
         playersCount++;
 
         /*
@@ -152,8 +169,55 @@ public class Nimsys {
          */
     }
 
-    private void addAIPlayer() {
-        // TODO: add code
+    private void addAIPlayer(Scanner keyboard) {
+        /*
+        // TRACING: print players and count BEFORE
+        for (int i = 0; i < playersCount; i++) {
+            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
+        }
+        System.out.println(playersCount);
+        */
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        String username = null;  // to keep compiler happy
+        String familyname = null;
+        String givenname = null;
+        try {
+            username = arguments.nextToken();
+            familyname = arguments.nextToken();
+            givenname = arguments.nextToken();
+        } catch (NoSuchElementException nsee) {
+            System.out.println("Incorrect number of arguments supplied to command.");
+            return;
+        }
+
+        // check if username already exists and set index according to alphabetical order
+        int index = 0;
+        for (int i = 0; i < playersCount; i++) {
+            if (username.equals(playersCollection[i].getUsername())) {
+                System.out.println("The player already exists.");
+                return;
+            } else if (username.compareTo(playersCollection[i].getUsername()) > 0) {
+                index++;
+            } else {
+                break;
+            }
+        }
+
+        // rearrange players higher in alphabetical order than new player
+        for (int i = playersCount; i > index; i--) {
+            playersCollection[i] = playersCollection[i-1];
+        }
+
+        playersCollection[index] = new NimAIPlayer(username, familyname, givenname);
+        playersCount++;
+
+        /*
+        // TRACING: print player and count AFTER
+        for (int i = 0; i < playersCount; i++) {
+            System.out.println(playersCollection[i].getUsername() + playersCollection[i].getFamilyname() + playersCollection[i].getGivennname());
+        }
+        System.out.println(playersCount);
+         */
     }
 
     private void removePlayer(Scanner keyboard) {

@@ -1,3 +1,12 @@
+/*
+    SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
+    PERIOD: SEMESTER 2 2020
+    ASSIGNMENT: ASSIGNMENT 1
+    FULL NAME: KELVIN LIM WAN
+    STUDENT NUMBER: 929715
+    CANVAS USERNAME: KELVINL3
+*/
+
 public class NimCommand {
 
     // instance variables
@@ -5,6 +14,11 @@ public class NimCommand {
     private String[] parameterList;
 
     // constructors
+    public NimCommand() {
+        command = null;
+        parameterList = null;
+    }
+
     public NimCommand(String command) {
         this.command = command;
         parameterList = null;

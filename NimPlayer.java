@@ -7,7 +7,7 @@
     CANVAS USERNAME: KELVINL3
  */
 
-public class NimPlayer {
+public abstract class NimPlayer {
 
     // constant variable
     private static final int MIN_FOR_TWO_DIGITS_REP = 10;
@@ -18,16 +18,22 @@ public class NimPlayer {
     private String givenname;
     private int games;
     private int wins;
-    private int remove;
 
     // constructors
+    public NimPlayer() {
+        username = null;
+        familyname = null;
+        givenname = null;
+        games = 0;
+        wins = 0;
+    }
+
     public NimPlayer(String username, String familyname, String givenname) {
         this.username = username;
         this.familyname = familyname;
         this.givenname = givenname;
-        wins = 0;
         games = 0;
-        remove = 1;
+        wins = 0;
     }
 
     // getter methods
@@ -46,9 +52,6 @@ public class NimPlayer {
     public int getWins() {
         return wins;
     }
-    public int removeStone() {
-        return remove;
-    }
 
     // setter methods
     public void setFamilyname(String familyname) {
@@ -63,9 +66,8 @@ public class NimPlayer {
     public void setWins(int wins) {
         this.wins = wins;
     }
-    public void toRemove(int remove) {
-        this.remove = remove;
-    }
+
+    public abstract int removeStone();
 
     public String fullname() {
         return givenname + " " + familyname;
@@ -90,11 +92,9 @@ public class NimPlayer {
         }
     }
 
-    // return true if the two players have same username, family name, given name, games and wins; return false otherwise
+    // return true if the two players have same username; return false otherwise
     public boolean equals(NimPlayer player) {
-        return username.equals(player.getUsername()) && familyname.equals(player.getFamilyname()) &&
-                givenname.equals(player.getGivennname()) && games == player.getGames() &&
-                wins == player.getWins();
+        return username.equals(player.getUsername());
     }
 
     // display the player's game statistics

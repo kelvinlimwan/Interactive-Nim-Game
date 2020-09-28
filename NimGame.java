@@ -1,3 +1,12 @@
+/*
+    SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
+    PERIOD: SEMESTER 2 2020
+    ASSIGNMENT: ASSIGNMENT 1
+    FULL NAME: KELVIN LIM WAN
+    STUDENT NUMBER: 929715
+    CANVAS USERNAME: KELVINL3
+*/
+
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
@@ -12,11 +21,47 @@ public class NimGame {
     private NimPlayer player1;
     private NimPlayer player2;
 
+    //constructors
+    public NimGame() {
+        numStonesLeft = 0;
+        upperBound = 0;
+        player1 = null;
+        player2 = null;
+    }
+
     public NimGame(int numStonesLeft, int upperBound, NimPlayer player1, NimPlayer player2) {
         this.numStonesLeft = numStonesLeft;
         this.upperBound = upperBound;
         this.player1 = player1;
         this.player2 = player2;
+    }
+
+    // getters
+    public int getNumStonesLeft() {
+        return numStonesLeft;
+    }
+    public int getUpperBound() {
+        return upperBound;
+    }
+    public NimPlayer getPlayer1() {
+        return player1;
+    }
+    public NimPlayer getPlayer2() {
+        return player2;
+    }
+
+    // setters
+    public void setNumStonesLeft(int numStonesLeft) {
+        this.numStonesLeft = numStonesLeft;
+    }
+    public void setUpperBound(int upperBound) {
+        this.upperBound = upperBound;
+    }
+    public void setPlayer1(NimPlayer player) {
+        this.player1 = player;
+    }
+    public void setPlayer2(NimPlayer player) {
+        this.player2 = player;
     }
 
     public void play(Scanner keyboard) {
@@ -38,34 +83,46 @@ public class NimGame {
             }
             System.out.println();
 
-            // deduct stones to remove from numStones when valid number is given
-            while (true) {
-                int maxStonesToRemove = Math.min(upperBound, numStonesLeft);
-                try {
-                    // TODO: check if answer should be given on same line or next line (currently next line)
-                    System.out.println(currentPlayer.getGivennname() +
-                            "'s turn - remove how many?");
+            // TODO: check if answer should be given on same line or next line (currently next line)
+            System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
 
-                    currentPlayer.toRemove(keyboard.nextInt()); // may throw InputMismatchException
+            int maxStonesToRemove = Math.min(upperBound, numStonesLeft);
 
-                    if (currentPlayer.removeStone() < MIN_STONES_TO_REMOVE ||
-                            currentPlayer.removeStone() > maxStonesToRemove) {
-                        throw new Exception("Invalid move. You must remove between " +
+            // TODO: check if downcasting is safe
+            if (currentPlayer instanceof NimAIPlayer) {
+                // TODO: check if answer should be given on same line or next line (currently next line)
+                System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
+
+                ((NimAIPlayer) currentPlayer).setNumStonesLeft(numStonesLeft);
+                ((NimAIPlayer) currentPlayer).setMaxStonesToRemove(maxStonesToRemove);
+                numStonesLeft -= currentPlayer.removeStone();
+            } else if (currentPlayer instanceof NimHumanPlayer) {
+                // deduct stones to remove from numStones when valid number is given
+                while (true) {
+                    try {
+                        // TODO: check if answer should be given on same line or next line (currently next line)
+                        System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
+                        ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt()); // may throw InputMismatchException
+
+                        if (currentPlayer.removeStone() < MIN_STONES_TO_REMOVE ||
+                                currentPlayer.removeStone() > maxStonesToRemove) {
+                            throw new Exception("Invalid move. You must remove between " +
+                                    MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove + " stones.");
+                        } else {
+                            numStonesLeft -= currentPlayer.removeStone();
+                            break;
+                        }
+                    } catch (InputMismatchException ime) {
+                        keyboard.nextLine(); // to avoid infinite loop
+                        System.out.println();
+                        System.out.println("Invalid move. You must remove between " +
                                 MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove + " stones.");
-                    } else {
-                        numStonesLeft -= currentPlayer.removeStone();
-                        break;
+                        System.out.println();
+                    } catch (Exception e) {
+                        System.out.println();
+                        System.out.println(e.getMessage());
+                        System.out.println();
                     }
-                } catch (InputMismatchException ime) {
-                    keyboard.nextLine(); // to avoid infinite loop
-                    System.out.println();
-                    System.out.println("Invalid move. You must remove between " +
-                            MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove + " stones.");
-                    System.out.println();
-                } catch (Exception e) {
-                    System.out.println();
-                    System.out.println(e.getMessage());
-                    System.out.println();
                 }
             }
 
