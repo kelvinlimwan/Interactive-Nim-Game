@@ -7,6 +7,7 @@
     CANVAS USERNAME: KELVINL3
 */
 
+import java.io.*;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.NoSuchElementException;
@@ -15,7 +16,12 @@ public class Nimsys {
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
-        Nimsys system = new Nimsys();
+        Nimsys system = new Nimsys(keyboard);
+
+        File fileObject = new File(FILENAME);
+        if (fileObject.exists()) {
+            system.loadState();
+        }
 
         System.out.println("Welcome to Nim");
         System.out.println();
@@ -23,90 +29,108 @@ public class Nimsys {
                 "information");
 
         // start the command console
-        console(keyboard, system);
+        system.console(system);
     }
 
-    // constant variable
+    // constant variables
+    private static final String FILENAME = "players.dat";
     private static final int PLAYERS_COLLECTION_CAPACITY = 100;
     private static final int MAX_PLAYERS_TO_DISPLAY = 10;
 
     // instance variables
-    private final NimPlayer[] playersCollection;
+    private NimPlayer[] playersCollection;
     private int playersCount;
+    private Scanner keyboard;
+
+    private enum CommandName {exit, addplayer, addaiplayer, removeplayer, editplayer, resetstats,
+        displayplayer, rankings, startgame, startadvancedgame, commands, help};
 
     // constructor
-    public Nimsys() {
+    public Nimsys(Scanner keyboard) {
         playersCollection = new NimPlayer[PLAYERS_COLLECTION_CAPACITY];
         playersCount = 0;
+        this.keyboard = keyboard;
     }
 
     // getters
     public NimPlayer[] getPlayersCollection() {
-        NimPlayer[] output = new NimPlayer[playersCount];
-        for (int i = 0; i < playersCount; i++) {
-            output[i] = playersCollection[i];
-        }
-        return output;
+        return playersCollection;
     }
     public int getPlayersCount() {
         return playersCount;
     }
 
-    // setter
+    // setters
+    public void setPlayersCollection(NimPlayer[] playersCollection) {
+        this.playersCollection = playersCollection;
+    }
     public void setPlayersCount(int playersCount) {
         this.playersCount = playersCount;
     }
 
     // command-line input console
-    public static void console(Scanner keyboard, Nimsys system) {
+    public void console(Nimsys system) {
         // repeat until user wants to exit game
         while (true) {
             System.out.println();
 
-            try {
-                // get user command
-                System.out.print("$ ");
-                String command = keyboard.next();
+            // get user command
+            System.out.print("$ ");
+            String command = keyboard.next();
 
-                if (command.equals("exit")) {
-                    system.exit();
-                    break;  // terminate application operations naturally
-                } else if (command.equals("addplayer")) {
-                    system.addPlayer(keyboard);
-                } else if (command.equals("addaiplayer")) {
-                    system.addAIPlayer(keyboard);
-                } else if (command.equals("removeplayer")) {
-                    system.removePlayer(keyboard);
-                } else if (command.equals("editplayer")) {
-                    system.editPlayer(keyboard);
-                } else if (command.equals("resetstats")) {
-                    system.resetStats(keyboard);
-                } else if (command.equals("displayplayer")) {
-                    system.displayPlayer(keyboard);
-                } else if (command.equals("rankings")) {
-                    system.rankings(keyboard);
-                } else if (command.equals("startgame")) {
-                    system.startGame(keyboard);
-                } else if (command.equals("startadvancedgame")) {
-                    system.startAdvancedGame(keyboard);
-                } else if (command.equals("commands")) {
-                    system.commands();
-                } else if (command.equals("help")) {
-                    system.help();
-                } else {
-                    throw new Exception("'" + command + "' is not a valid command.");
+            try {
+                CommandName commandName = CommandName.valueOf(command);
+
+                switch (commandName) {
+                    case exit:
+                        system.exit();
+                        return;  // terminate application operations naturally
+                    case addplayer:
+                        system.addPlayer();
+                        break;
+                    case addaiplayer:
+                        system.addAIPlayer();
+                        break;
+                    case removeplayer:
+                        system.removePlayer();
+                        break;
+                    case editplayer:
+                        system.editPlayer();
+                        break;
+                    case resetstats:
+                        system.resetStats();
+                        break;
+                    case displayplayer:
+                        system.displayPlayer();
+                        break;
+                    case rankings:
+                        system.rankings();
+                        break;
+                    case startgame:
+                        system.startGame();
+                        break;
+                    case startadvancedgame:
+                        system.startAdvancedGame();
+                        break;
+                    case commands:
+                        system.commands();
+                        break;
+                    case help:
+                        system.help();
+                        break;
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            } catch (IllegalArgumentException iae) {
+                System.out.println("'" + command + "' is not a valid command.");
             }
         }
     }
 
     private void exit() {
-        // TODO: for file (player.dat)
+        saveState();
+        keyboard.close();
     }
 
-    private void addPlayer(Scanner keyboard) {
+    private void addPlayer() {
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
         String username = null;  // to keep compiler happy
         String familyname = null;
@@ -142,7 +166,7 @@ public class Nimsys {
         playersCount++;
     }
 
-    private void addAIPlayer(Scanner keyboard) {
+    private void addAIPlayer() {
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
         String username = null;  // to keep compiler happy
         String familyname = null;
@@ -178,18 +202,18 @@ public class Nimsys {
         playersCount++;
     }
 
-    private void removePlayer(Scanner keyboard) {
+    private void removePlayer() {
         String username = keyboard.nextLine().trim();
         if (username.isEmpty()) {
             System.out.println("Are you sure you want to remove all players? (y/n)");
             String answer = keyboard.next();
-            // TODO: case sensitive? any other input other than y is no?
             if (answer.equals("y")) {
                 for (int i = 0; i < playersCount; i++) {
                     playersCollection[i] = null;
                 }
                 playersCount = 0;
             }
+            // when answer is 'n', function does nothing and return the command console
         } else {
             boolean exist = false;
             for (int i = 0; i < playersCount; i++) {
@@ -213,7 +237,7 @@ public class Nimsys {
         }
     }
 
-    private void editPlayer(Scanner keyboard) {
+    private void editPlayer() {
 
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
         String username = null;  // to keep compiler happy
@@ -238,13 +262,12 @@ public class Nimsys {
         System.out.println("The player does not exist.");
     }
 
-    private void resetStats(Scanner keyboard) {
+    private void resetStats() {
         String username = keyboard.nextLine().trim();
 
         if (username.isEmpty()) {
             System.out.println("Are you sure you want to reset all player statistics? (y/n)");
             String answer = keyboard.next();
-            // TODO: case sensitive? any other input other than y is no?
             if (answer.equals("y")) {
                 for (int i = 0; i < playersCount; i++) {
                     playersCollection[i].setGames(0);
@@ -263,7 +286,7 @@ public class Nimsys {
         }
     }
 
-    private void displayPlayer(Scanner keyboard) {
+    private void displayPlayer() {
         String username = keyboard.nextLine().trim();
 
         if (username.isEmpty()) {
@@ -281,7 +304,7 @@ public class Nimsys {
         }
     }
 
-    private void rankings(Scanner keyboard) {
+    private void rankings() {
         String order = keyboard.nextLine().trim();
 
         NimPlayer[] ranks = new NimPlayer[Math.min(playersCount, MAX_PLAYERS_TO_DISPLAY)];
@@ -345,7 +368,7 @@ public class Nimsys {
     }
 
     // trigger the start of the game
-    private void startGame(Scanner keyboard) {
+    private void startGame() {
 
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
         int initNumStones = 0;  // to keep compiler happy
@@ -384,7 +407,7 @@ public class Nimsys {
         }
     }
 
-    private void startAdvancedGame(Scanner keyboard) {
+    private void startAdvancedGame() {
         // TODO: add code
     }
 
@@ -397,15 +420,17 @@ public class Nimsys {
                 "firstname"});
         commands[2] = new NimCommand("addaiplayer", new String[] {"username", "secondname",
                 "firstname"});
-        commands[3] = new NimCommand("removeplayer", new String[] {"username"});
+        commands[3] = new NimCommand("removeplayer", new String[] {"optional username"});
         commands[4] = new NimCommand("editplayer", new String[] {"username", "secondname",
                 "firstname"});
         commands[5] = new NimCommand("resetstats", new String[] {"optional username"});
         commands[6] = new NimCommand("displayplayer", new String[] {"optional username"});
         commands[7] = new NimCommand("rankings", new String[] {"optional asc"});
-        commands[8] = new NimCommand("startgame", new String[] {"username1", "username2"});
-        commands[9] = new NimCommand("startadvancedgame", new String[] {"username1",
-                "username2"});
+        commands[8] = new NimCommand("startgame", new String[] {"initialstones",
+                "upperbound", "username1", "username2"});
+        // TODO: check parameter upperbound in startadvancedgame
+        commands[9] = new NimCommand("startadvancedgame", new String[] {"initialstones",
+                "username1", "username2"});
         commands[10] = new NimCommand("commands");
         commands[11] = new NimCommand("help");
 
@@ -420,5 +445,34 @@ public class Nimsys {
         System.out.println("Type 'commands' to list all available commands");
         System.out.println("Type 'startgame' to play game");
         System.out.println("The player that removes the last stone loses!");
+    }
+
+    private void loadState() {
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(FILENAME));
+            NimState state = (NimState) inputStream.readObject();
+
+            playersCollection = state.getPlayersCollection();
+            playersCount = state.getPlayersCount();
+            inputStream.close();
+
+        } catch (IOException ioe) {
+            System.out.println("IOException caught!");
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println("ClassNotFoundException caught!");
+        }
+    }
+
+    private void saveState() {
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILENAME));
+            NimState state = new NimState(playersCollection, playersCount);
+
+            outputStream.writeObject(state);
+            outputStream.close();
+
+        } catch (IOException ioe) {
+            System.out.println("IOException caught!");
+        }
     }
 }

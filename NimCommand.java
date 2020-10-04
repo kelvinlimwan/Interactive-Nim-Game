@@ -14,10 +14,6 @@ public class NimCommand {
     private String[] parameterList;
 
     // constructors
-    public NimCommand() {
-        this(null, null);
-    }
-
     public NimCommand(String command) {
         this(command, null);
     }

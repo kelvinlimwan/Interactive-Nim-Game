@@ -1,9 +1,18 @@
+/*
+    SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
+    PERIOD: SEMESTER 2 2020
+    ASSIGNMENT: ASSIGNMENT 1
+    FULL NAME: KELVIN LIM WAN
+    STUDENT NUMBER: 929715
+    CANVAS USERNAME: KELVINL3
+*/
+
 public class NimAIPlayer extends NimPlayer {
 
     // constant variable
     private static final int MIN_STONES_TO_REMOVE = 1;
 
-    // instance variable
+    // instance variables
     private int numStonesLeft;
     private int maxStonesToRemove;
 

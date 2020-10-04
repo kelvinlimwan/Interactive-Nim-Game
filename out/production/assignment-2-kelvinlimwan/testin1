@@ -1,0 +1,25 @@
+commands
+addplayer lskywalker, Skywalker, Luke
+addplayer lskywalker, Skywalker, Luke
+removeplayer lskyrunner
+removeplayer lskywalker
+addplayer lskywalker, Skywalker, Luke
+removeplayer
+y
+addplayer lskywalker, Skywalker, Luke
+editplayer lskyrunner, Skywalker, Laurence
+editplayer lskywalker, Skywalker, Laurence
+displayplayer lskyrunner
+displayplayer lskywalker
+addplayer hsolo, Solo, Han
+startgame 10, 3, lskywalker, hsol
+startgame 10, 3, lskywalker, hsolo
+4
+3
+3
+3
+0
+1
+rankings
+exit
+

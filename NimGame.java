@@ -63,6 +63,7 @@ public class NimGame {
 
     public void play(Scanner keyboard) {
 
+        System.out.println();
         System.out.println("Initial stone count: " + numStonesLeft);
         System.out.println("Maximum stone removal: " + upperBound);
         System.out.println("Player 1: " + player1.fullname());
@@ -80,14 +81,10 @@ public class NimGame {
             }
             System.out.println();
 
-            // TODO: check if answer should be given on same line or next line (currently next line)
-            System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
-
             int maxStonesToRemove = Math.min(upperBound, numStonesLeft);
 
             // TODO: check if downcasting is safe
             if (currentPlayer instanceof NimAIPlayer) {
-                // TODO: check if answer should be given on same line or next line (currently next line)
                 System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
 
                 ((NimAIPlayer) currentPlayer).setNumStonesLeft(numStonesLeft);
@@ -97,7 +94,6 @@ public class NimGame {
                 // deduct stones to remove from numStones when valid number is given
                 while (true) {
                     try {
-                        // TODO: check if answer should be given on same line or next line (currently next line)
                         System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
                         ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt()); // may throw InputMismatchException
 

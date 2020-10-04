@@ -7,7 +7,9 @@
     CANVAS USERNAME: KELVINL3
  */
 
-public abstract class NimPlayer {
+import java.io.Serializable;
+
+public abstract class NimPlayer implements Serializable {
 
     // constant variable
     private static final int MIN_FOR_TWO_DIGITS_REP = 10;
