@@ -29,6 +29,7 @@ public class NimState implements Serializable {
         return playersCount;
     }
 
+    /*
     // setters
     public void setPlayersCollection(NimPlayer[] playersCollection) {
         this.playersCollection = playersCollection;
@@ -36,4 +37,5 @@ public class NimState implements Serializable {
     public void setPlayersCount(int playersCount) {
         this.playersCount = playersCount;
     }
+     */
 }

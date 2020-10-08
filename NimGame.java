@@ -10,106 +10,84 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
-public class NimGame {
-
-    // constant variable
-    private static final int MIN_STONES_TO_REMOVE = 1;
+public class NimGame extends NimBaseGame{
 
     // instance variables
-    private int numStonesLeft;
     private int upperBound;
-    private NimPlayer player1;
-    private NimPlayer player2;
 
-    //constructors
-    public NimGame() {
-        this(0, 0, null, null);
-    }
-
+    //constructor
     public NimGame(int numStonesLeft, int upperBound, NimPlayer player1, NimPlayer player2) {
-        this.numStonesLeft = numStonesLeft;
+        super(numStonesLeft, player1, player2);
         this.upperBound = upperBound;
-        this.player1 = player1;
-        this.player2 = player2;
     }
 
+    /*
     // getters
-    public int getNumStonesLeft() {
-        return numStonesLeft;
-    }
     public int getUpperBound() {
         return upperBound;
     }
-    public NimPlayer getPlayer1() {
-        return player1;
-    }
-    public NimPlayer getPlayer2() {
-        return player2;
-    }
 
     // setters
-    public void setNumStonesLeft(int numStonesLeft) {
-        this.numStonesLeft = numStonesLeft;
-    }
     public void setUpperBound(int upperBound) {
         this.upperBound = upperBound;
-    }
-    public void setPlayer1(NimPlayer player) {
-        this.player1 = player;
-    }
-    public void setPlayer2(NimPlayer player) {
-        this.player2 = player;
-    }
+     */
 
+    @Override
     public void play(Scanner keyboard) {
 
         System.out.println();
-        System.out.println("Initial stone count: " + numStonesLeft);
+        System.out.println("Initial stone count: " + getNumStonesLeft());
         System.out.println("Maximum stone removal: " + upperBound);
-        System.out.println("Player 1: " + player1.fullname());
-        System.out.println("Player 2: " + player2.fullname());
+        System.out.printf("Player 1: %s %s\n", getPlayer1().getGivennname(),
+                getPlayer1().getFamilyname());
+        System.out.printf("Player 2: %s %s\n", getPlayer2().getGivennname(),
+                getPlayer2().getFamilyname());
+        System.out.println();
 
-        NimPlayer currentPlayer = player1;
+        NimPlayer currentPlayer = getPlayer1();
         // repeat removal of stones until all stones are removed
-        while (numStonesLeft > 0) {
-            System.out.println();
+        while (getNumStonesLeft() > 0) {
+            // deduct stones to remove from numStones when valid number is given
+            while (true) {
+                // display number of stones left, represented by asterisks
+                System.out.print(getNumStonesLeft() + " stones left:");
+                for (int i = 0; i < getNumStonesLeft(); i++) {
+                    System.out.print(" *");
+                }
+                System.out.println();
 
-            // display number of stones left, represented by asterisks
-            System.out.print(numStonesLeft + " stones left :");
-            for (int i = 0; i < numStonesLeft; i++) {
-                System.out.print(" *");
-            }
-            System.out.println();
-
-            int maxStonesToRemove = Math.min(upperBound, numStonesLeft);
-
-            // TODO: check if downcasting is safe
-            if (currentPlayer instanceof NimAIPlayer) {
                 System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
 
-                ((NimAIPlayer) currentPlayer).setNumStonesLeft(numStonesLeft);
-                ((NimAIPlayer) currentPlayer).setMaxStonesToRemove(maxStonesToRemove);
-                numStonesLeft -= currentPlayer.removeStone();
-            } else if (currentPlayer instanceof NimHumanPlayer) {
-                // deduct stones to remove from numStones when valid number is given
-                while (true) {
+                int maxStonesToRemove = Math.min(upperBound, getNumStonesLeft());
+
+                // TODO: check if downcasting is safe
+                // when turn of ai player
+                if (currentPlayer instanceof NimAIPlayer) {
+                    ((NimAIPlayer) currentPlayer).setNumStonesLeft(getNumStonesLeft());
+                    ((NimAIPlayer) currentPlayer).setMaxStonesToRemove(maxStonesToRemove);
+                    setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
+                    break;
+
+                // when turn of human player
+                } else if (currentPlayer instanceof NimHumanPlayer) {
                     try {
-                        System.out.println(currentPlayer.getGivennname() + "'s turn - remove how many?");
                         ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt()); // may throw InputMismatchException
 
                         if (currentPlayer.removeStone() < MIN_STONES_TO_REMOVE ||
                                 currentPlayer.removeStone() > maxStonesToRemove) {
                             throw new Exception("Invalid move. You must remove between " +
-                                    MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove + " stones.");
-                        } else {
-                            numStonesLeft -= currentPlayer.removeStone();
-                            break;
+                                    MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove +
+                                    " stones.");
                         }
+
+                        setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
+                        break;
+
                     } catch (InputMismatchException ime) {
                         keyboard.nextLine(); // to avoid infinite loop
                         System.out.println();
-                        System.out.println("Invalid move. You must remove between " +
-                                MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove + " stones.");
+                        System.out.printf("Invalid move. You must remove between %d and %d " +
+                                        "stones.\n", MIN_STONES_TO_REMOVE, maxStonesToRemove);
                         System.out.println();
                     } catch (Exception e) {
                         System.out.println();
@@ -118,28 +96,29 @@ public class NimGame {
                     }
                 }
             }
+            System.out.println();
 
             // switch currentPlayer for next turn
-            if (currentPlayer.equals(player1)) {
-                currentPlayer = player2;
+            if (currentPlayer.equals(getPlayer1())) {
+                currentPlayer = getPlayer2();
             } else {
-                currentPlayer = player1;
+                currentPlayer = getPlayer1();
             }
         }
 
         // set number of wins for winning player
-        if (currentPlayer.equals(player1)) {
-            player1.setWins(player1.getWins() + 1);
+        if (currentPlayer.equals(getPlayer1())) {
+            getPlayer1().setWins(getPlayer1().getWins() + 1);
         } else {
-            player2.setWins(player2.getWins() + 1);
+            getPlayer2().setWins(getPlayer2().getWins() + 1);
         }
 
         // set number of games played for both players
-        player1.setGames(player1.getGames() + 1);
-        player2.setGames(player2.getGames() + 1);
+        getPlayer1().setGames(getPlayer1().getGames() + 1);
+        getPlayer2().setGames(getPlayer2().getGames() + 1);
 
-        System.out.println();
         System.out.println("Game Over");
-        System.out.println(currentPlayer.fullname() + " wins!");
+        System.out.printf("%s %s wins!\n", currentPlayer.getGivennname(),
+                currentPlayer.getFamilyname());
     }
 }

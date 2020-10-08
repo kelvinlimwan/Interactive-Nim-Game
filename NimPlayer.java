@@ -22,12 +22,6 @@ public abstract class NimPlayer implements Serializable {
     private int wins;
 
     // constructors
-    public NimPlayer() {
-        this(null, null, null);
-        games = 0;
-        wins = 0;
-    }
-
     public NimPlayer(String username, String familyname, String givenname) {
         this.username = username;
         this.familyname = familyname;
@@ -68,10 +62,7 @@ public abstract class NimPlayer implements Serializable {
     }
 
     public abstract int removeStone();
-
-    public String fullname() {
-        return givenname + " " + familyname;
-    }
+    public abstract String advancedMove(boolean[] available, String lastMove);
 
     public double winRatio() {
         if (games != 0) {
@@ -80,11 +71,11 @@ public abstract class NimPlayer implements Serializable {
         return 0;
     }
 
-    public String roundWinRatioRep() {
+    public String winRatioRoundedRep() {
         return Math.round(winRatio()) + "%";
     }
 
-    public String twoDigitGamesRep() {
+    public String gamesTwoDigitRep() {
         if (games < MIN_FOR_TWO_DIGITS_REP) {
             return "0" + games;
         } else {
@@ -94,7 +85,9 @@ public abstract class NimPlayer implements Serializable {
 
     // return true if the two players have same username; return false otherwise
     public boolean equals(NimPlayer player) {
-        return username.equals(player.getUsername());
+        return username.equals(player.getUsername()) && familyname.equals(player.getFamilyname()) &&
+                givenname.equals(player.getGivennname()) && games == player.getGames() &&
+                wins == player.getWins();
     }
 
     // display the player's game statistics

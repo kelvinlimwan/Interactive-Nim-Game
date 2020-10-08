@@ -1,0 +1,72 @@
+Welcome to Nim
+
+Please enter a command to continue or type 'help' for more information
+
+$  1: exit              (no parameters)
+ 2: addplayer         (username, secondname, firstname)
+ 3: addaiplayer       (username, secondname, firstname)
+ 4: removeplayer      (optional username)
+ 5: editplayer        (username, secondname, firstname)
+ 6: resetstats        (optional username)
+ 7: displayplayer     (optional username)
+ 8: rankings          (optional asc)
+ 9: startgame         (initialstones, upperbound, username1, username2)
+10: startadvancedgame (initialstones, username1, username2)
+11: commands          (no parameters)
+12: help              (no parameters)
+
+$ 
+$ The player already exists.
+
+$ The player does not exist.
+
+$ 
+$ 
+$ Are you sure you want to remove all players? (y/n)
+
+$ 
+$ The player does not exist.
+
+$ 
+$ The player does not exist.
+
+$ lskywalker, Laurence, Skywalker, 0 games, 0 wins
+
+$ 
+$ One of the players does not exist.
+
+$ 
+Initial stone count: 10
+Maximum stone removal: 3
+Player 1: Laurence Skywalker
+Player 2: Han Solo
+
+10 stones left: * * * * * * * * * *
+Laurence's turn - remove how many?
+
+Invalid move. You must remove between 1 and 3 stones.
+
+10 stones left: * * * * * * * * * *
+Laurence's turn - remove how many?
+
+7 stones left: * * * * * * *
+Han's turn - remove how many?
+
+4 stones left: * * * *
+Laurence's turn - remove how many?
+
+1 stones left: *
+Han's turn - remove how many?
+
+Invalid move. You must remove between 1 and 1 stones.
+
+1 stones left: *
+Han's turn - remove how many?
+
+Game Over
+Laurence Skywalker wins!
+
+$ 100% | 01 games | Laurence Skywalker
+0%   | 01 games | Han Solo
+
+$ 

@@ -8,6 +8,7 @@
 */
 
 import java.io.*;
+
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.NoSuchElementException;
@@ -27,13 +28,15 @@ public class Nimsys {
         System.out.println();
         System.out.println("Please enter a command to continue or type 'help' for more " +
                 "information");
+        System.out.println();
 
         // start the command console
-        system.console(system);
+        console(keyboard, system);
     }
 
     // constant variables
     private static final String FILENAME = "players.dat";
+    private static final String DELIMITERS = ", ";
     private static final int PLAYERS_COLLECTION_CAPACITY = 100;
     private static final int MAX_PLAYERS_TO_DISPLAY = 10;
 
@@ -41,17 +44,20 @@ public class Nimsys {
     private NimPlayer[] playersCollection;
     private int playersCount;
     private Scanner keyboard;
+    private static boolean repeat;
 
-    private enum CommandName {exit, addplayer, addaiplayer, removeplayer, editplayer, resetstats,
-        displayplayer, rankings, startgame, startadvancedgame, commands, help};
+    private enum CommandName {EXIT, ADDPLAYER, ADDAIPLAYER, REMOVEPLAYER, EDITPLAYER, RESETSTATS,
+        DISPLAYPLAYER, RANKINGS, STARTGAME, STARTADVANCEDGAME, COMMANDS, HELP};
 
     // constructor
     public Nimsys(Scanner keyboard) {
         playersCollection = new NimPlayer[PLAYERS_COLLECTION_CAPACITY];
         playersCount = 0;
         this.keyboard = keyboard;
+        repeat = true;
     }
 
+    /*
     // getters
     public NimPlayer[] getPlayersCollection() {
         return playersCollection;
@@ -67,60 +73,62 @@ public class Nimsys {
     public void setPlayersCount(int playersCount) {
         this.playersCount = playersCount;
     }
+    */
 
     // command-line input console
-    public void console(Nimsys system) {
+    public static void console(Scanner keyboard, Nimsys system) {
         // repeat until user wants to exit game
-        while (true) {
-            System.out.println();
-
+        while (repeat) {
             // get user command
             System.out.print("$ ");
             String command = keyboard.next();
 
             try {
-                CommandName commandName = CommandName.valueOf(command);
+                CommandName commandName = CommandName.valueOf(command.toUpperCase());
 
                 switch (commandName) {
-                    case exit:
+                    case EXIT:
                         system.exit();
-                        return;  // terminate application operations naturally
-                    case addplayer:
+                        break;  // terminate application operations naturally
+                    case ADDPLAYER:
                         system.addPlayer();
                         break;
-                    case addaiplayer:
+                    case ADDAIPLAYER:
                         system.addAIPlayer();
                         break;
-                    case removeplayer:
+                    case REMOVEPLAYER:
                         system.removePlayer();
                         break;
-                    case editplayer:
+                    case EDITPLAYER:
                         system.editPlayer();
                         break;
-                    case resetstats:
+                    case RESETSTATS:
                         system.resetStats();
                         break;
-                    case displayplayer:
+                    case DISPLAYPLAYER:
                         system.displayPlayer();
                         break;
-                    case rankings:
+                    case RANKINGS:
                         system.rankings();
                         break;
-                    case startgame:
+                    case STARTGAME:
                         system.startGame();
                         break;
-                    case startadvancedgame:
+                    case STARTADVANCEDGAME:
                         system.startAdvancedGame();
                         break;
-                    case commands:
+                    case COMMANDS:
                         system.commands();
                         break;
-                    case help:
+                    case HELP:
                         system.help();
                         break;
                 }
             } catch (IllegalArgumentException iae) {
-                System.out.println("'" + command + "' is not a valid command.");
+                keyboard.nextLine();  // skip any further arguments
+                System.out.printf("'%s' is not a valid command.\n", command);
+            } finally {
+                System.out.println();
             }
         }
     }
@@ -128,10 +136,11 @@ public class Nimsys {
     private void exit() {
         saveState();
         keyboard.close();
+        repeat = false;
     }
 
     private void addPlayer() {
-        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine(), DELIMITERS);
         String username = null;  // to keep compiler happy
         String familyname = null;
         String givenname = null;
@@ -167,7 +176,7 @@ public class Nimsys {
     }
 
     private void addAIPlayer() {
-        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine(), DELIMITERS);
         String username = null;  // to keep compiler happy
         String familyname = null;
         String givenname = null;
@@ -206,7 +215,7 @@ public class Nimsys {
         String username = keyboard.nextLine().trim();
         if (username.isEmpty()) {
             System.out.println("Are you sure you want to remove all players? (y/n)");
-            String answer = keyboard.next();
+            String answer = keyboard.next().toLowerCase();
             if (answer.equals("y")) {
                 for (int i = 0; i < playersCount; i++) {
                     playersCollection[i] = null;
@@ -239,7 +248,7 @@ public class Nimsys {
 
     private void editPlayer() {
 
-        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine(), DELIMITERS);
         String username = null;  // to keep compiler happy
         String newFamilyname = null;
         String newGivenname = null;
@@ -267,13 +276,14 @@ public class Nimsys {
 
         if (username.isEmpty()) {
             System.out.println("Are you sure you want to reset all player statistics? (y/n)");
-            String answer = keyboard.next();
+            String answer = keyboard.next().toLowerCase();
             if (answer.equals("y")) {
                 for (int i = 0; i < playersCount; i++) {
                     playersCollection[i].setGames(0);
                     playersCollection[i].setWins(0);
                 }
             }
+            // when answer is 'n', function does nothing and return the command console
         } else {
             for (int i = 0; i < playersCount; i++) {
                 if (username.equals(playersCollection[i].getUsername())) {
@@ -362,16 +372,16 @@ public class Nimsys {
         }
 
         for (NimPlayer player: ranks) {
-            System.out.printf("%-5s| %s games | %s\n", player.roundWinRatioRep(),
-                    player.twoDigitGamesRep(), player.fullname());
+            System.out.printf("%-5s| %s games | %s %s\n", player.winRatioRoundedRep(),
+                    player.gamesTwoDigitRep(), player.getGivennname(), player.getFamilyname());
         }
     }
 
     // trigger the start of the game
     private void startGame() {
 
-        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine());
-        int initNumStones = 0;  // to keep compiler happy
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine(), DELIMITERS);
+        int initNumStones = 0;
         int upperBound = 0;
         String username1 = null;
         String username2 = null;
@@ -390,7 +400,9 @@ public class Nimsys {
         boolean exist1 = false;
         boolean exist2 = false;
         for (int i = 0; i < playersCount; i++) {
-            if (username1.equals(playersCollection[i].getUsername())) {
+            if (exist1 && exist2) {
+                break;
+            } else if (username1.equals(playersCollection[i].getUsername())) {
                 exist1 = true;
                 player1 = playersCollection[i];
             } else if (username2.equals(playersCollection[i].getUsername())) {
@@ -403,12 +415,46 @@ public class Nimsys {
             NimGame game = new NimGame(initNumStones, upperBound, player1, player2);
             game.play(keyboard);
         } else {
-            System.out.println("One of the players does not exist");
+            System.out.println("One of the players does not exist.");
         }
     }
 
     private void startAdvancedGame() {
-        // TODO: add code
+        StringTokenizer arguments = new StringTokenizer(keyboard.nextLine(), DELIMITERS);
+        int initNumStones = 0;
+        String username1 = null;
+        String username2 = null;
+        try {
+            initNumStones = Integer.parseInt(arguments.nextToken());
+            username1 = arguments.nextToken();
+            username2 = arguments.nextToken();
+        } catch (NoSuchElementException nsee) {
+            System.out.println("Incorrect number of arguments supplied to command.");
+            return;
+        }
+
+        NimPlayer player1 = null;
+        NimPlayer player2 = null;
+        boolean exist1 = false;
+        boolean exist2 = false;
+        for (int i = 0; i < playersCount; i++) {
+            if (exist1 && exist2) {
+                break;
+            } else if (username1.equals(playersCollection[i].getUsername())) {
+                exist1 = true;
+                player1 = playersCollection[i];
+            } else if (username2.equals(playersCollection[i].getUsername())) {
+                exist2 = true;
+                player2 = playersCollection[i];
+            }
+        }
+
+        if (exist1 && exist2) {
+            NimAdvancedGame advancedGame = new NimAdvancedGame(initNumStones, player1, player2);
+            advancedGame.play(keyboard);
+        } else {
+            System.out.println("One of the players does not exist.");
+        }
     }
 
     // display all commands available to user
@@ -456,23 +502,29 @@ public class Nimsys {
             playersCount = state.getPlayersCount();
             inputStream.close();
 
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("Could not find file!");
         } catch (IOException ioe) {
-            System.out.println("IOException caught!");
+            System.out.println("Could not read from file!");
+            ioe.printStackTrace();
         } catch (ClassNotFoundException cnfe) {
-            System.out.println("ClassNotFoundException caught!");
+            System.out.println("Could not find class!");
         }
     }
 
     private void saveState() {
         try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILENAME));
+            ObjectOutputStream outputStream =
+                    new ObjectOutputStream(new FileOutputStream(FILENAME));
             NimState state = new NimState(playersCollection, playersCount);
 
             outputStream.writeObject(state);
             outputStream.close();
 
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("Could not find file!");
         } catch (IOException ioe) {
-            System.out.println("IOException caught!");
+            System.out.println("Could not read from file!");
         }
     }
 }
