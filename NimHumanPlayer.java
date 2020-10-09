@@ -9,7 +9,7 @@
 
 public class NimHumanPlayer extends NimPlayer {
 
-    // instance variable
+    // instance variables
     private int remove;
     private int position;
 
@@ -27,7 +27,6 @@ public class NimHumanPlayer extends NimPlayer {
         this.position = position;
     }
 
-    // getters
     @Override
     public int removeStone() {
         return remove;

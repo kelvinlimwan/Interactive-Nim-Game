@@ -61,9 +61,13 @@ public abstract class NimPlayer implements Serializable {
         this.wins = wins;
     }
 
+    // return number of stones to remove in a normal game round
     public abstract int removeStone();
+
+    // return position and number of stones to remove in an advanced game round
     public abstract String advancedMove(boolean[] available, String lastMove);
 
+    // return the win ratio of player
     public double winRatio() {
         if (games != 0) {
             return (double) wins / games * 100;
@@ -71,10 +75,12 @@ public abstract class NimPlayer implements Serializable {
         return 0;
     }
 
+    // return a rounded percentage representation of player
     public String winRatioRoundedRep() {
         return Math.round(winRatio()) + "%";
     }
 
+    // return a two digit representation of player's number of games played
     public String gamesTwoDigitRep() {
         if (games < MIN_FOR_TWO_DIGITS_REP) {
             return "0" + games;
@@ -83,14 +89,15 @@ public abstract class NimPlayer implements Serializable {
         }
     }
 
-    // return true if the two players have same username; return false otherwise
+    /* return true if the two players have same username, family name, given name, number of games
+    played and number of wins; return false otherwise */
     public boolean equals(NimPlayer player) {
         return username.equals(player.getUsername()) && familyname.equals(player.getFamilyname()) &&
                 givenname.equals(player.getGivennname()) && games == player.getGames() &&
                 wins == player.getWins();
     }
 
-    // display the player's game statistics
+    // display player's names and statistics
     public String toString() {
         return username + ", " + givenname + ", " + familyname + ", " + games + " games, " + wins +
                 " wins";

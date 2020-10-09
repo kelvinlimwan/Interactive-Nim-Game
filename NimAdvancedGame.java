@@ -18,7 +18,7 @@ public class NimAdvancedGame extends NimBaseGame {
     private static final int MAX_STONES_TO_REMOVE = 2;
     private static final boolean DEFAULT_BOOLEAN = false;
 
-    // instance variable
+    // instance variables
     private int initNumStones;
     private boolean[] available;
     private String lastMove;
@@ -54,10 +54,13 @@ public class NimAdvancedGame extends NimBaseGame {
         System.out.println();
 
         NimPlayer currentPlayer = getPlayer1();
+
         // repeat removal of stones until all stones are removed
         while (getNumStonesLeft() > 0) {
-            // deduct stones to remove from numStones when valid number and position is given
+
+            // deduct stones to remove from number of stones left when valid number is given
             while (true) {
+
                 // display stones represented by asterisks if present and x if removed
                 System.out.print(getNumStonesLeft() + " stones left:");
                 for (int i = 1; i <= initNumStones; i++) {
@@ -71,7 +74,7 @@ public class NimAdvancedGame extends NimBaseGame {
 
                 System.out.println(currentPlayer.getGivennname() + "'s turn - which to remove?");
 
-                // when turn of ai player
+                // when it is an ai's turn
                 if (currentPlayer instanceof NimAIPlayer) {
 
                     lastMove = currentPlayer.advancedMove(available, lastMove);
@@ -80,7 +83,7 @@ public class NimAdvancedGame extends NimBaseGame {
                     int position = Integer.parseInt(move.nextToken());
                     int numToRemove = Integer.parseInt(move.nextToken());
 
-                    // update boolean array available
+                    // update boolean array
                     for (int i = 1; i <= numToRemove; i++) {
                         available[position+i-2] = false;
                     }
@@ -88,10 +91,13 @@ public class NimAdvancedGame extends NimBaseGame {
                     setNumStonesLeft(getNumStonesLeft() - numToRemove);
                     break;
 
-                // when turn of human player
+                // TODO: check if downcasting is safe
+                // when it is a human's turn
                 } else if (currentPlayer instanceof NimHumanPlayer) {
+
                     try {
-                        ((NimHumanPlayer) currentPlayer).setPosition(keyboard.nextInt()); // may throw InputMismatchException
+
+                        ((NimHumanPlayer) currentPlayer).setPosition(keyboard.nextInt());
                         ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt());
 
                         lastMove = currentPlayer.advancedMove(available, lastMove);
@@ -100,7 +106,7 @@ public class NimAdvancedGame extends NimBaseGame {
                         int position = Integer.parseInt(move.nextToken());
                         int numToRemove = Integer.parseInt(move.nextToken());
 
-                        // catch invalid inputs
+                        // throw exceptions for invalid position or number of stones prompted
                         if (position < SMALLEST_POSITION || position > initNumStones) {
                             throw new Exception("Invalid move.");
                         } else if (numToRemove != MIN_STONES_TO_REMOVE &&
@@ -117,15 +123,14 @@ public class NimAdvancedGame extends NimBaseGame {
                             }
                         }
 
-                        // update boolean array available
+                        // update boolean array
                         for (int i = 1; i <= numToRemove; i++) {
                             available[position+i-2] = false;
                         }
 
                         setNumStonesLeft(getNumStonesLeft() - numToRemove);
                         break;
-
-                    } catch (InputMismatchException ime) {
+                    } catch (InputMismatchException e) {
                         keyboard.nextLine(); // to avoid infinite loop
                         System.out.println();
                         System.out.println("Invalid move.");
@@ -139,7 +144,7 @@ public class NimAdvancedGame extends NimBaseGame {
             }
             System.out.println();
 
-            // switch currentPlayer for next turn
+            // switch current player for next turn
             if (currentPlayer.equals(getPlayer1())) {
                 currentPlayer = getPlayer2();
             } else {
@@ -148,7 +153,7 @@ public class NimAdvancedGame extends NimBaseGame {
 
         }
 
-        // set start to false for ai players
+        // set symmetrical and subset to false for ai players
         if (getPlayer1() instanceof NimAIPlayer) {
             ((NimAIPlayer) getPlayer1()).setSymmetrical(DEFAULT_BOOLEAN);
             ((NimAIPlayer) getPlayer1()).setSubset(DEFAULT_BOOLEAN);
@@ -158,11 +163,13 @@ public class NimAdvancedGame extends NimBaseGame {
             ((NimAIPlayer) getPlayer2()).setSubset(DEFAULT_BOOLEAN);
         }
 
-        // set number of wins for winning player
+        // set the winner
         NimPlayer winner = getPlayer1();
         if (currentPlayer.equals(getPlayer1())) {
             winner = getPlayer2();
         }
+
+        // set number of wins for winner
         winner.setWins(winner.getWins() + 1);
 
         // set number of games played for both players

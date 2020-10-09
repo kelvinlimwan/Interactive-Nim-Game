@@ -23,45 +23,15 @@ public class NimCommand {
         this.parameterList = parameterList;
     }
 
-    /*
-    // getters
-    public String getCommand() {
-        return command;
-    }
-    public String[] getParameterList() {
-        if (parameterList == null) {
-            System.out.println("No parameters");
-            return new String[] {};
-        }
-        String[] output = new String[parameterList.length];
-        for (int i = 0; i < parameterList.length; i++) {
-            output[i] = parameterList[i];
-        }
-        return output;
-
-    }
-
-    // setters
-    public void setCommand(String command) {
-        this.command = command;
-    }
-    public void setParameterList(String[] parameterList) {
-        if (parameterList == null) {
-            System.out.println("No parameters");
-            return;
-        }
-        this.parameterList = new String[parameterList.length];
-        for (int i = 0; i < parameterList.length; i++) {
-            this.parameterList[i] = parameterList[i];
-        }
-    }
-     */
-
+    // display command and its parameters
     public String toString() {
         String output = String.format("%-18s", command);
 
+        // when command has no parameters
         if (parameterList == null) {
             output += "(no parameters)";
+
+        // when command has parameters
         } else {
             for (int i = 0; i < parameterList.length; i++) {
                 if (i == 0) {

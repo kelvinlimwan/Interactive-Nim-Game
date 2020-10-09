@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public abstract class NimBaseGame {
 
+    // constant variable
     protected static final int MIN_STONES_TO_REMOVE = 1;
 
     // instance variables
@@ -36,19 +37,12 @@ public abstract class NimBaseGame {
         return player2;
     }
 
-    // setters
+    // setter
     public void setNumStonesLeft(int numStonesLeft) {
         this.numStonesLeft = numStonesLeft;
     }
-    /*
-    public void setPlayer1() {
-        this.player1 = player1;
-    }
-    public void setPlayer2() {
-        this.player2 = player2;
-    }
-     */
 
+    // launch game playing mode
     public abstract void play(Scanner keyboard);
 
 }

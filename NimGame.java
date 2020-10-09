@@ -12,7 +12,7 @@ import java.util.InputMismatchException;
 
 public class NimGame extends NimBaseGame{
 
-    // instance variables
+    // instance variable
     private int upperBound;
 
     //constructor
@@ -20,17 +20,6 @@ public class NimGame extends NimBaseGame{
         super(numStonesLeft, player1, player2);
         this.upperBound = upperBound;
     }
-
-    /*
-    // getters
-    public int getUpperBound() {
-        return upperBound;
-    }
-
-    // setters
-    public void setUpperBound(int upperBound) {
-        this.upperBound = upperBound;
-     */
 
     @Override
     public void play(Scanner keyboard) {
@@ -45,10 +34,13 @@ public class NimGame extends NimBaseGame{
         System.out.println();
 
         NimPlayer currentPlayer = getPlayer1();
+
         // repeat removal of stones until all stones are removed
         while (getNumStonesLeft() > 0) {
-            // deduct stones to remove from numStones when valid number is given
+
+            // deduct stones to remove from number of stones left when valid number is given
             while (true) {
+
                 // display number of stones left, represented by asterisks
                 System.out.print(getNumStonesLeft() + " stones left:");
                 for (int i = 0; i < getNumStonesLeft(); i++) {
@@ -61,18 +53,23 @@ public class NimGame extends NimBaseGame{
                 int maxStonesToRemove = Math.min(upperBound, getNumStonesLeft());
 
                 // TODO: check if downcasting is safe
-                // when turn of ai player
+                // when it is an ai's turn
                 if (currentPlayer instanceof NimAIPlayer) {
+
                     ((NimAIPlayer) currentPlayer).setNumStonesLeft(getNumStonesLeft());
                     ((NimAIPlayer) currentPlayer).setMaxStonesToRemove(maxStonesToRemove);
+
                     setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
                     break;
 
-                // when turn of human player
+                // when it is a human's turn
                 } else if (currentPlayer instanceof NimHumanPlayer) {
-                    try {
-                        ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt()); // may throw InputMismatchException
 
+                    try {
+
+                        ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt());
+
+                        // throw exceptions for invalid number of stones prompted
                         if (currentPlayer.removeStone() < MIN_STONES_TO_REMOVE ||
                                 currentPlayer.removeStone() > maxStonesToRemove) {
                             throw new Exception("Invalid move. You must remove between " +
@@ -82,9 +79,8 @@ public class NimGame extends NimBaseGame{
 
                         setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
                         break;
-
-                    } catch (InputMismatchException ime) {
-                        keyboard.nextLine(); // to avoid infinite loop
+                    } catch (InputMismatchException e) {
+                        keyboard.nextLine();  // to avoid infinite loop
                         System.out.println();
                         System.out.printf("Invalid move. You must remove between %d and %d " +
                                         "stones.\n", MIN_STONES_TO_REMOVE, maxStonesToRemove);
@@ -98,7 +94,7 @@ public class NimGame extends NimBaseGame{
             }
             System.out.println();
 
-            // switch currentPlayer for next turn
+            // switch current player for next turn
             if (currentPlayer.equals(getPlayer1())) {
                 currentPlayer = getPlayer2();
             } else {
