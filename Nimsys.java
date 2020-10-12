@@ -1,14 +1,19 @@
 /*
     SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
     PERIOD: SEMESTER 2 2020
-    ASSIGNMENT: ASSIGNMENT 1
+    ASSIGNMENT: ASSIGNMENT 2
     FULL NAME: KELVIN LIM WAN
     STUDENT NUMBER: 929715
     CANVAS USERNAME: KELVINL3
 */
 
-import java.io.*;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.NoSuchElementException;
@@ -19,7 +24,6 @@ public class Nimsys {
 
         Scanner keyboard = new Scanner(System.in);
         Nimsys system = new Nimsys(keyboard);
-
         File fileObject = new File(FILENAME);
 
         // load previous game's contents if file exists
@@ -37,16 +41,16 @@ public class Nimsys {
         console(keyboard, system);
     }
 
-    // constant variables
+    // constants
     private static final String FILENAME = "players.dat";
-    private static final String DELIMITERS = ", ";
-    private static final int PLAYERS_COLLECTION_CAPACITY = 100;
-    private static final int MAX_PLAYERS_TO_DISPLAY = 10;
+    private final String DELIMITERS = ", ";
+    private final int PLAYERS_COLLECTION_CAPACITY = 100;
+    private final int MAX_PLAYERS_TO_DISPLAY = 10;
 
     // instance variables
     private NimPlayer[] playersCollection;
     private int playersCount;
-    private static boolean repeat;
+    private static boolean repeat;  // whether to repeat the game or not
     private final Scanner keyboard;
 
     private enum CommandName {EXIT, ADDPLAYER, ADDAIPLAYER, REMOVEPLAYER, EDITPLAYER, RESETSTATS,
@@ -71,17 +75,16 @@ public class Nimsys {
             String command = keyboard.next();
 
             try {
-
                 CommandName commandName = CommandName.valueOf(command.toUpperCase());
                 switch (commandName) {
                     case EXIT:
                         system.exit();
                         break;
                     case ADDPLAYER:
-                        system.addPlayer("HUMAN");
+                        system.addPlayer("human");
                         break;
                     case ADDAIPLAYER:
-                        system.addPlayer("AI");
+                        system.addPlayer("ai");
                         break;
                     case REMOVEPLAYER:
                         system.removePlayer();
@@ -99,10 +102,10 @@ public class Nimsys {
                         system.rankings();
                         break;
                     case STARTGAME:
-                        system.startGame("GAME");
+                        system.startGame("game");
                         break;
                     case STARTADVANCEDGAME:
-                        system.startGame("ADVANCED");
+                        system.startGame("advanced");
                         break;
                     case COMMANDS:
                         system.commands();
@@ -111,8 +114,9 @@ public class Nimsys {
                         system.help();
                         break;
                 }
+
             } catch (IllegalArgumentException e) {
-                keyboard.nextLine();  // skip any further arguments
+                keyboard.nextLine();  // discard any further arguments
                 System.out.printf("'%s' is not a valid command.\n", command);
             } finally {
                 System.out.println();
@@ -137,12 +141,13 @@ public class Nimsys {
 
         // get user inputs
         try {
-            username = arguments.nextToken();
+            username = arguments.nextToken().toLowerCase();
             familyname = arguments.nextToken();
             givenname = arguments.nextToken();
+
         } catch (NoSuchElementException e) {
             System.out.println("Incorrect number of arguments supplied to command.");
-            return;
+            return;  // return to command console
         }
 
         /* check if player already exists; if not, find new player's appropriate index in the
@@ -151,11 +156,11 @@ public class Nimsys {
         for (int i = 0; i < playersCount; i++) {
             if (username.equals(playersCollection[i].getUsername())) {
                 System.out.println("The player already exists.");
-                return;
+                return;  // return to command console
             } else if (username.compareTo(playersCollection[i].getUsername()) > 0) {
                 index++;
             } else {
-                break;
+                break;  // break when search is beyond username in alphabetical order
             }
         }
 
@@ -165,7 +170,7 @@ public class Nimsys {
         }
 
         // create new player of appropriate type and add to the collection at appropriate index
-        if (playerType.equals("HUMAN")) {
+        if (playerType.equals("human")) {
             playersCollection[index] = new NimHumanPlayer(username, familyname, givenname);
         } else {
             playersCollection[index] = new NimAIPlayer(username, familyname, givenname);
@@ -194,10 +199,12 @@ public class Nimsys {
                 }
                 playersCount = 0;
             }
-            // when answer is 'n', function returns the command console
+            // when answer is 'n', function naturally returns to command console
 
         // when a username is given
         } else {
+
+            username = username.toLowerCase();
 
             /* check if player exists; if so, decrement players 'higher' than player to be removed
             in the alphabetical order */
@@ -209,14 +216,18 @@ public class Nimsys {
                         if (!exist) {
                             exist = true;
                         }
+
+                    // for last player in collection
                     } else {
                         playersCollection[i] = null;
                         playersCount--;
-                        return;
+                        return;  // return to command console
                     }
                 }
             }
+
             System.out.println("The player does not exist.");
+
         }
     }
 
@@ -230,7 +241,7 @@ public class Nimsys {
 
         // get user inputs
         try {
-            username = arguments.nextToken();
+            username = arguments.nextToken().toLowerCase();
             newFamilyname = arguments.nextToken();
             newGivenname = arguments.nextToken();
         } catch (NoSuchElementException e) {
@@ -243,10 +254,12 @@ public class Nimsys {
             if (username.equals(playersCollection[i].getUsername())) {
                 playersCollection[i].setFamilyname(newFamilyname);
                 playersCollection[i].setGivenname(newGivenname);
-                return;
+                return;  // return to command console
             }
         }
+
         System.out.println("The player does not exist.");
+
     }
 
     // reset player(s) stats for number of wins and number of games played
@@ -269,20 +282,24 @@ public class Nimsys {
                     playersCollection[i].setWins(0);
                 }
             }
-            // when answer is 'n', function does nothing and return the command console
+            // when answer is 'n', function naturally returns to command console
 
         // when a username is given
         } else {
+
+            username = username.toLowerCase();
 
             // check if player exists; if so, reset its stats
             for (int i = 0; i < playersCount; i++) {
                 if (username.equals(playersCollection[i].getUsername())) {
                     playersCollection[i].setGames(0);
                     playersCollection[i].setWins(0);
-                    return;
+                    return;  // return to command console
                 }
             }
+
             System.out.println("The player does not exist.");
+
         }
     }
 
@@ -302,14 +319,18 @@ public class Nimsys {
         // when a username is given
         } else {
 
+            username = username.toLowerCase();
+
             // check if player exists; if so, display its information
             for (int i = 0; i < playersCount; i++) {
                 if (username.equals(playersCollection[i].getUsername())) {
                     System.out.println(playersCollection[i]);
-                    return;
+                    return;  // return to command console
                 }
             }
+
             System.out.println("The player does not exist.");
+
         }
     }
 
@@ -335,9 +356,9 @@ public class Nimsys {
 
             /* iterate through all players in playersCollection to set the ith player to have
             the maximum (default) or minimum (if ascending order) win ratio amongst all players that
-            are not already in output array */
+            are not already in the output array */
             for (int j = 0; j < playersCount; j++) {
-                if ((! order.equals("asc") && playersCollection[j].winRatio() > compWinRatio) ||
+                if ((!order.equals("asc") && playersCollection[j].winRatio() > compWinRatio) ||
                         (order.equals("asc") && playersCollection[j].winRatio() < compWinRatio)) {
 
                     // check if jth player is not in output array
@@ -363,6 +384,7 @@ public class Nimsys {
         for (NimPlayer player: ranks) {
             System.out.printf("%-5s| %s games | %s %s\n", player.winRatioRoundedRep(),
                     player.gamesTwoDigitRep(), player.getGivennname(), player.getFamilyname());
+
         }
     }
 
@@ -371,7 +393,7 @@ public class Nimsys {
 
         StringTokenizer arguments = new StringTokenizer(keyboard.nextLine(), DELIMITERS);
         int initNumStones;
-        int upperBound = 0;  // to keep compiler happy (in case of normal game)
+        int upperBound = 0;  // to satisfy compiler
         String username1;
         String username2;
 
@@ -379,23 +401,23 @@ public class Nimsys {
             initNumStones = Integer.parseInt(arguments.nextToken());
 
             // only prompt for upper bound argument for normal game
-            if (gameType.equals("GAME")) {
+            if (gameType.equals("game")) {
                 upperBound = Integer.parseInt(arguments.nextToken());
             }
 
-            username1 = arguments.nextToken();
-            username2 = arguments.nextToken();
+            username1 = arguments.nextToken().toLowerCase();
+            username2 = arguments.nextToken().toLowerCase();
+
         } catch (NoSuchElementException e) {
             System.out.println("Incorrect number of arguments supplied to command.");
-            return;
+            return;  // return to command console
         }
 
+        // check if both players exist
         NimPlayer player1 = null;
         NimPlayer player2 = null;
         boolean exist1 = false;
         boolean exist2 = false;
-
-        // check if both players exist
         for (int i = 0; i < playersCount; i++) {
             if (exist1 && exist2) {
                 break;
@@ -411,7 +433,7 @@ public class Nimsys {
         // when both players exist, transfer control to appropriate game class
         if (exist1 && exist2) {
             NimBaseGame game;
-            if (gameType.equals("GAME")) {
+            if (gameType.equals("game")) {
                 game = new NimGame(initNumStones, upperBound, player1, player2);
             } else {
                 game = new NimAdvancedGame(initNumStones, player1, player2);
@@ -420,6 +442,7 @@ public class Nimsys {
         } else {
             System.out.println("One of the players does not exist.");
         }
+
     }
 
     // display all commands available to user
@@ -440,7 +463,7 @@ public class Nimsys {
         commands[7] = new NimCommand("rankings", new String[] {"optional asc"});
         commands[8] = new NimCommand("startgame", new String[] {"initialstones",
                 "upperbound", "username1", "username2"});
-        // TODO: check parameter upperbound in startadvancedgame
+        // TODO: include upperbound parameter?
         commands[9] = new NimCommand("startadvancedgame", new String[] {"initialstones",
                 "username1", "username2"});
         commands[10] = new NimCommand("commands");
@@ -449,6 +472,7 @@ public class Nimsys {
         // display commands and parameters
         for (int i = 0; i < commands.length; i++) {
             System.out.printf("%2d: %s\n", i + 1, commands[i]);
+
         }
     }
 
@@ -458,13 +482,13 @@ public class Nimsys {
         System.out.println("Type 'commands' to list all available commands");
         System.out.println("Type 'startgame' to play game");
         System.out.println("The player that removes the last stone loses!");
+
     }
 
     // load state of previous game from players.dat
     private void loadState() {
 
         try {
-
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(FILENAME));
 
             NimState state = (NimState) inputStream.readObject();
@@ -474,6 +498,7 @@ public class Nimsys {
             playersCount = state.getPlayersCount();
 
             inputStream.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("Could not find file!");
         } catch (IOException e) {
@@ -496,10 +521,12 @@ public class Nimsys {
             outputStream.writeObject(state);
 
             outputStream.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("Could not find file!");
         } catch (IOException e) {
             System.out.println("Could not read from file!");
         }
     }
+
 }

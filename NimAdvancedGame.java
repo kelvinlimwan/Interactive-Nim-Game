@@ -1,7 +1,7 @@
 /*
     SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
     PERIOD: SEMESTER 2 2020
-    ASSIGNMENT: ASSIGNMENT 1
+    ASSIGNMENT: ASSIGNMENT 2
     FULL NAME: KELVIN LIM WAN
     STUDENT NUMBER: 929715
     CANVAS USERNAME: KELVINL3
@@ -13,10 +13,9 @@ import java.util.StringTokenizer;
 
 public class NimAdvancedGame extends NimBaseGame {
 
-    // constant variables
-    private static final int SMALLEST_POSITION = 1;
-    private static final int MAX_STONES_TO_REMOVE = 2;
-    private static final boolean DEFAULT_BOOLEAN = false;
+    // constants
+    private final int SMALLEST_POSITION = 1;
+    private final int MAX_STONES_TO_REMOVE = 2;
 
     // instance variables
     private int initNumStones;
@@ -26,14 +25,11 @@ public class NimAdvancedGame extends NimBaseGame {
     // constructor
     public NimAdvancedGame(int numStonesLeft, NimPlayer player1, NimPlayer player2) {
         super(numStonesLeft, player1, player2);
-
         initNumStones = numStonesLeft;
-
         available = new boolean[numStonesLeft];
         for (int i = 0; i < numStonesLeft; i++) {
             available[i] = true;
         }
-
         lastMove = null;
     }
 
@@ -91,12 +87,10 @@ public class NimAdvancedGame extends NimBaseGame {
                     setNumStonesLeft(getNumStonesLeft() - numToRemove);
                     break;
 
-                // TODO: check if downcasting is safe
                 // when it is a human's turn
                 } else if (currentPlayer instanceof NimHumanPlayer) {
 
                     try {
-
                         ((NimHumanPlayer) currentPlayer).setPosition(keyboard.nextInt());
                         ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt());
 
@@ -117,7 +111,7 @@ public class NimAdvancedGame extends NimBaseGame {
                             throw new Exception("Invalid move.");
                         } else {
                             for (int i = 1; i <= numToRemove; i++) {
-                               if (! available[position+i-2]) {
+                               if (!available[position+i-2]) {
                                    throw new Exception("Invalid move.");
                                }
                             }
@@ -130,6 +124,7 @@ public class NimAdvancedGame extends NimBaseGame {
 
                         setNumStonesLeft(getNumStonesLeft() - numToRemove);
                         break;
+
                     } catch (InputMismatchException e) {
                         keyboard.nextLine(); // to avoid infinite loop
                         System.out.println();
@@ -142,6 +137,7 @@ public class NimAdvancedGame extends NimBaseGame {
                     }
                 }
             }
+
             System.out.println();
 
             // switch current player for next turn
@@ -155,12 +151,12 @@ public class NimAdvancedGame extends NimBaseGame {
 
         // set symmetrical and subset to false for ai players
         if (getPlayer1() instanceof NimAIPlayer) {
-            ((NimAIPlayer) getPlayer1()).setSymmetrical(DEFAULT_BOOLEAN);
-            ((NimAIPlayer) getPlayer1()).setSubset(DEFAULT_BOOLEAN);
+            ((NimAIPlayer) getPlayer1()).setSymmetrical(false);
+            ((NimAIPlayer) getPlayer1()).setSubset(false);
         }
         if (getPlayer2() instanceof NimAIPlayer) {
-            ((NimAIPlayer) getPlayer2()).setSymmetrical(DEFAULT_BOOLEAN);
-            ((NimAIPlayer) getPlayer2()).setSubset(DEFAULT_BOOLEAN);
+            ((NimAIPlayer) getPlayer2()).setSymmetrical(false);
+            ((NimAIPlayer) getPlayer2()).setSubset(false);
         }
 
         // set the winner

@@ -1,7 +1,7 @@
 /*
     SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
     PERIOD: SEMESTER 2 2020
-    ASSIGNMENT: ASSIGNMENT 1
+    ASSIGNMENT: ASSIGNMENT 2
     FULL NAME: KELVIN LIM WAN
     STUDENT NUMBER: 929715
     CANVAS USERNAME: KELVINL3
@@ -11,8 +11,8 @@ import java.util.Scanner;
 
 public abstract class NimBaseGame {
 
-    // constant variable
-    protected static final int MIN_STONES_TO_REMOVE = 1;
+    // constant
+    protected final int MIN_STONES_TO_REMOVE = 1;
 
     // instance variables
     private int numStonesLeft;

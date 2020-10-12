@@ -1,7 +1,7 @@
 /*
     SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
     PERIOD: SEMESTER 2 2020
-    ASSIGNMENT: ASSIGNMENT 1
+    ASSIGNMENT: ASSIGNMENT 2
     FULL NAME: KELVIN LIM WAN
     STUDENT NUMBER: 929715
     CANVAS USERNAME: KELVINL3
@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 public abstract class NimPlayer implements Serializable {
 
-    // constant variable
-    private static final int MIN_FOR_TWO_DIGITS_REP = 10;
+    // constant
+    private final int MIN_FOR_TWO_DIGITS_REP = 10;
 
     // instance variables
     private final String username;
@@ -67,7 +67,7 @@ public abstract class NimPlayer implements Serializable {
     // return position and number of stones to remove in an advanced game round
     public abstract String advancedMove(boolean[] available, String lastMove);
 
-    // return the win ratio of player
+    // return win ratio of player
     public double winRatio() {
         if (games != 0) {
             return (double) wins / games * 100;
@@ -75,7 +75,7 @@ public abstract class NimPlayer implements Serializable {
         return 0;
     }
 
-    // return a rounded percentage representation of player
+    // return rounded percentage string representation of player's win ratio
     public String winRatioRoundedRep() {
         return Math.round(winRatio()) + "%";
     }
@@ -102,4 +102,5 @@ public abstract class NimPlayer implements Serializable {
         return username + ", " + givenname + ", " + familyname + ", " + games + " games, " + wins +
                 " wins";
     }
+
 }

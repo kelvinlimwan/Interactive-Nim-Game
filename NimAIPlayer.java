@@ -1,7 +1,7 @@
 /*
     SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
     PERIOD: SEMESTER 2 2020
-    ASSIGNMENT: ASSIGNMENT 1
+    ASSIGNMENT: ASSIGNMENT 2
     FULL NAME: KELVIN LIM WAN
     STUDENT NUMBER: 929715
     CANVAS USERNAME: KELVINL3
@@ -11,11 +11,11 @@ import java.util.StringTokenizer;
 
 public class NimAIPlayer extends NimPlayer {
 
-    // constant variable
+    // constants
     private static final String DEFAULT_NAME = "anonymous";
-    private static final int MIN_STONES_TO_REMOVE = 1;
-    private static final int MAX_STONES_TO_REMOVE_ADVANCED = 2;
-    private static final int MAX_CROSSOVERS_FOR_SUBSET = 2;
+    private final int MIN_STONES_TO_REMOVE = 1;
+    private final int MAX_STONES_TO_REMOVE_ADVANCED = 2;
+    private final int MAX_CROSSOVERS_FOR_SUBSET = 2;
 
     // instance variables
     private int numStonesLeft;
@@ -96,7 +96,7 @@ public class NimAIPlayer extends NimPlayer {
                 return n - posPlayed + " " + numRemoved;
             }
 
-        // when array contains a subset as a new game that is 'cut' into equal halves
+        // when array contains a subset as a new game that is already 'cut' into equal halves
         } else if (subset) {
 
             StringTokenizer move = new StringTokenizer(lastMove);
@@ -109,9 +109,10 @@ public class NimAIPlayer extends NimPlayer {
             } else {
                 return subLength - transPosPlayed + (startIndex - 1) + " " + numRemoved;
             }
+
         } else {
 
-            // SUBSET ATTEMPT
+            // ATTEMPT TO FIND SUBSET
 
             // check if subset as new game exists
             endIndex = n + 1;
@@ -143,7 +144,8 @@ public class NimAIPlayer extends NimPlayer {
                 }
             }
 
-            // SYMMETRICAL ATTEMPT
+
+            // ATTEMPT TO MAKE ARRAY SYMMETRICAL
 
             int count = 0;
             int position = 0;
@@ -173,7 +175,6 @@ public class NimAIPlayer extends NimPlayer {
                             }
                         }
 
-
                         if (!left && !right) {
                             left = available[i];
                             right = available[n - i - 1];
@@ -185,38 +186,42 @@ public class NimAIPlayer extends NimPlayer {
                                 position = n - i;
                             }
                         }
+
                     }
                 }
             }
 
             // when removing one stone makes array symmetrical
             if (count == MIN_STONES_TO_REMOVE) {
-
                 symmetrical = true;
                 return position + " " + MIN_STONES_TO_REMOVE;
 
             // when removing two adjacent stones makes array symmetrical
             } else if (count == MAX_STONES_TO_REMOVE_ADVANCED && adjacent) {
-
                 symmetrical = true;
                 return position + " " + MAX_STONES_TO_REMOVE_ADVANCED;
 
             }
 
-            // OPTIMISATION
+
+            // ATTEMPT TO OPTIMISE OTHER PLAYER TO MAKE A MISTAKE
 
             StringTokenizer move = new StringTokenizer(lastMove);
             int posPlayed = Integer.parseInt(move.nextToken());
             int numRemoved = Integer.parseInt(move.nextToken());
 
             // mirror opponent's move in other half if possible
-            if (numRemoved == 1) {
+            if (numRemoved == MIN_STONES_TO_REMOVE) {
+
+                // when previous move was in lower half
                 if (posPlayed < n / 2 + 1) {
                     for (int i = n / 2 + 1; i <= n; i++) {
                         if (available[i - 1]) {
                             return i + " " + numRemoved;
                         }
                     }
+
+                // when previous move was in upper half
                 } else {
                     for (int i = 1; i <= n / 2; i++) {
                         if (available[i - 1]) {
@@ -224,13 +229,18 @@ public class NimAIPlayer extends NimPlayer {
                         }
                     }
                 }
+
             } else {
+
+                // when previous move was in lower half
                 if (posPlayed < n / 2 + 1) {
                     for (int i = n / 2 + 1; i <= n - 1; i++) {
                         if (available[i - 1] && available[i]) {
                             return i + " " + numRemoved;
                         }
                     }
+
+                // when previous move was in upper half
                 } else {
                     for (int i = 1; i <= n / 2 - 1; i++) {
                         if (available[i - 1] && available[i]) {

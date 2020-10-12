@@ -1,7 +1,7 @@
 /*
     SUBJECT: COMP90041 PROGRAMMING AND SOFTWARE DEVELOPMENT
     PERIOD: SEMESTER 2 2020
-    ASSIGNMENT: ASSIGNMENT 1
+    ASSIGNMENT: ASSIGNMENT 2
     FULL NAME: KELVIN LIM WAN
     STUDENT NUMBER: 929715
     CANVAS USERNAME: KELVINL3
@@ -52,7 +52,6 @@ public class NimGame extends NimBaseGame{
 
                 int maxStonesToRemove = Math.min(upperBound, getNumStonesLeft());
 
-                // TODO: check if downcasting is safe
                 // when it is an ai's turn
                 if (currentPlayer instanceof NimAIPlayer) {
 
@@ -66,7 +65,6 @@ public class NimGame extends NimBaseGame{
                 } else if (currentPlayer instanceof NimHumanPlayer) {
 
                     try {
-
                         ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt());
 
                         // throw exceptions for invalid number of stones prompted
@@ -79,6 +77,7 @@ public class NimGame extends NimBaseGame{
 
                         setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
                         break;
+
                     } catch (InputMismatchException e) {
                         keyboard.nextLine();  // to avoid infinite loop
                         System.out.println();
@@ -92,6 +91,7 @@ public class NimGame extends NimBaseGame{
                     }
                 }
             }
+
             System.out.println();
 
             // switch current player for next turn
@@ -100,6 +100,7 @@ public class NimGame extends NimBaseGame{
             } else {
                 currentPlayer = getPlayer1();
             }
+
         }
 
         // set number of wins for winning player

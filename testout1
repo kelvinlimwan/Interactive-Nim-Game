@@ -5,15 +5,16 @@ Please enter a command to continue or type 'help' for more information
 $  1: exit              (no parameters)
  2: addplayer         (username, secondname, firstname)
  3: addaiplayer       (username, secondname, firstname)
- 4: removeplayer      (username)
+ 4: removeplayer      (optional username)
  5: editplayer        (username, secondname, firstname)
  6: resetstats        (optional username)
  7: displayplayer     (optional username)
  8: rankings          (optional asc)
- 9: startgame         (username1, username2)
-10: startadvancedgame (username1, username2)
+ 9: startgame         (initialstones, upperbound, username1, username2)
+10: startadvancedgame (initialstones, username1, username2)
 11: commands          (no parameters)
 12: help              (no parameters)
+
 $ 
 $ The player already exists.
 
