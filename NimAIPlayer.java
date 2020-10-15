@@ -7,48 +7,38 @@
     CANVAS USERNAME: KELVINL3
 */
 
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class NimAIPlayer extends NimPlayer {
 
     // constants
-    private static final String DEFAULT_NAME = "anonymous";
-    private final int MIN_STONES_TO_REMOVE = 1;
-    private final int MAX_STONES_TO_REMOVE_ADVANCED = 2;
-    private final int MAX_CROSSOVERS_FOR_SUBSET = 2;
+    private static final int MIN_STONES_TO_REMOVE = 1;
+    private static final int UPPER_BOUND = 2;
+    private static final int MAX_CROSSOVERS_FOR_SUBSET = 2;
 
     // instance variables
-    private int numStonesLeft;
-    private int maxStonesToRemove;
-    private boolean symmetrical;
-    private boolean subset;
     private int startIndex;
     private int endIndex;
     private int subLength;
+    private boolean symmetrical;
+    private boolean subset;
 
     // constructors
     public NimAIPlayer() {
-        this(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_NAME);
+        this("anonymous", "anonymous", "anonymous");
     }
 
     public NimAIPlayer(String username, String familyname, String givenname) {
         super(username, familyname, givenname);
-        numStonesLeft = 0;
-        maxStonesToRemove = 1;
-        symmetrical = false;
-        subset = false;
         startIndex = 0;
         endIndex = 0;
         subLength = 0;
+        symmetrical = false;
+        subset = false;
     }
 
     // setters
-    public void setNumStonesLeft(int numStonesLeft) {
-        this.numStonesLeft = numStonesLeft;
-    }
-    public void setMaxStonesToRemove(int maxStonesToRemove) {
-        this.maxStonesToRemove = maxStonesToRemove;
-    }
     public void setSymmetrical(boolean symmetrical) {
         this.symmetrical = symmetrical;
     }
@@ -57,7 +47,8 @@ public class NimAIPlayer extends NimPlayer {
     }
 
     @Override
-    public int removeStone() {
+    public int removeStone(int numStonesLeft, int maxStonesToRemove, Scanner keyboard) {
+
         if ((numStonesLeft - 1) % (maxStonesToRemove + 1) != 0) {
             return (numStonesLeft - 1) % (maxStonesToRemove + 1);
         } else {
@@ -65,7 +56,7 @@ public class NimAIPlayer extends NimPlayer {
         }
     }
 
-    @Override
+    // return position and number of stones to remove in an advanced game round
     public String advancedMove(boolean[] available, String lastMove) {
 
         int n = available.length;
@@ -77,7 +68,7 @@ public class NimAIPlayer extends NimPlayer {
 
             // 'cut' array into equal halves by removing the middle stone(s)
             if (n % 2 == 0) {
-                return n / 2 + " " + MAX_STONES_TO_REMOVE_ADVANCED;
+                return n / 2 + " " + UPPER_BOUND;
             } else {
                 return (n / 2 + 1) + " " + MIN_STONES_TO_REMOVE;
             }
@@ -138,7 +129,7 @@ public class NimAIPlayer extends NimPlayer {
 
                 // 'cut' array subset into equal halves by removing the middle stone(s)
                 if (subLength % 2 == 0) {
-                    return subLength / 2 + (startIndex - 1) + " " + MAX_STONES_TO_REMOVE_ADVANCED;
+                    return subLength / 2 + (startIndex - 1) + " " + UPPER_BOUND;
                 } else {
                     return (subLength / 2 + 1) + (startIndex - 1) + " " + MIN_STONES_TO_REMOVE;
                 }
@@ -197,9 +188,9 @@ public class NimAIPlayer extends NimPlayer {
                 return position + " " + MIN_STONES_TO_REMOVE;
 
             // when removing two adjacent stones makes array symmetrical
-            } else if (count == MAX_STONES_TO_REMOVE_ADVANCED && adjacent) {
+            } else if (count == UPPER_BOUND && adjacent) {
                 symmetrical = true;
-                return position + " " + MAX_STONES_TO_REMOVE_ADVANCED;
+                return position + " " + UPPER_BOUND;
 
             }
 

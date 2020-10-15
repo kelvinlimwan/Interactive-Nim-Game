@@ -7,15 +7,16 @@
     CANVAS USERNAME: KELVINL3
  */
 
+import java.util.Scanner;
 import java.io.Serializable;
 
 public abstract class NimPlayer implements Serializable {
 
     // constant
-    private final int MIN_FOR_TWO_DIGITS_REP = 10;
+    private static final int MIN_FOR_TWO_DIGITS_REP = 10;
 
     // instance variables
-    private final String username;
+    private String username;
     private String familyname;
     private String givenname;
     private int games;
@@ -61,12 +62,6 @@ public abstract class NimPlayer implements Serializable {
         this.wins = wins;
     }
 
-    // return number of stones to remove in a normal game round
-    public abstract int removeStone();
-
-    // return position and number of stones to remove in an advanced game round
-    public abstract String advancedMove(boolean[] available, String lastMove);
-
     // return win ratio of player
     public double winRatio() {
         if (games != 0) {
@@ -89,6 +84,9 @@ public abstract class NimPlayer implements Serializable {
         }
     }
 
+    // return number of stones to remove in a normal game round
+    public abstract int removeStone(int numStonesLeft, int maxStonesToRemove, Scanner keyboard);
+
     /* return true if the two players have same username, family name, given name, number of games
     played and number of wins; return false otherwise */
     public boolean equals(NimPlayer player) {
@@ -97,7 +95,7 @@ public abstract class NimPlayer implements Serializable {
                 wins == player.getWins();
     }
 
-    // display player's names and statistics
+    @Override
     public String toString() {
         return username + ", " + givenname + ", " + familyname + ", " + games + " games, " + wins +
                 " wins";

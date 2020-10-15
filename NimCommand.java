@@ -17,7 +17,6 @@ public class NimCommand {
     public NimCommand(String command) {
         this(command, null);
     }
-
     public NimCommand(String command, String[] parameterList) {
         this.command = command;
         this.parameterList = parameterList;
@@ -25,6 +24,7 @@ public class NimCommand {
 
     // display command and its parameters
     public String toString() {
+
         String output = String.format("%-18s", command);
 
         // when command has no parameters

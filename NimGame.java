@@ -52,43 +52,29 @@ public class NimGame extends NimBaseGame{
 
                 int maxStonesToRemove = Math.min(upperBound, getNumStonesLeft());
 
-                // when it is an ai's turn
-                if (currentPlayer instanceof NimAIPlayer) {
+                try {
+                    int numRemove = currentPlayer.removeStone(getNumStonesLeft(),
+                            maxStonesToRemove, keyboard);
 
-                    ((NimAIPlayer) currentPlayer).setNumStonesLeft(getNumStonesLeft());
-                    ((NimAIPlayer) currentPlayer).setMaxStonesToRemove(maxStonesToRemove);
+                    // throw exceptions for invalid number of stones prompted
+                    if (numRemove < MIN_STONES_TO_REMOVE || numRemove > maxStonesToRemove) {
+                        throw new Exception("Invalid move. You must remove between " +
+                                MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove + " stones.");
+                    }
 
-                    setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
+                    setNumStonesLeft(getNumStonesLeft() - numRemove);
                     break;
 
-                // when it is a human's turn
-                } else if (currentPlayer instanceof NimHumanPlayer) {
-
-                    try {
-                        ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt());
-
-                        // throw exceptions for invalid number of stones prompted
-                        if (currentPlayer.removeStone() < MIN_STONES_TO_REMOVE ||
-                                currentPlayer.removeStone() > maxStonesToRemove) {
-                            throw new Exception("Invalid move. You must remove between " +
-                                    MIN_STONES_TO_REMOVE + " and " + maxStonesToRemove +
-                                    " stones.");
-                        }
-
-                        setNumStonesLeft(getNumStonesLeft() - currentPlayer.removeStone());
-                        break;
-
-                    } catch (InputMismatchException e) {
-                        keyboard.nextLine();  // to avoid infinite loop
-                        System.out.println();
-                        System.out.printf("Invalid move. You must remove between %d and %d " +
-                                        "stones.\n", MIN_STONES_TO_REMOVE, maxStonesToRemove);
-                        System.out.println();
-                    } catch (Exception e) {
-                        System.out.println();
-                        System.out.println(e.getMessage());
-                        System.out.println();
-                    }
+                } catch (InputMismatchException e) {
+                    keyboard.nextLine();  // to avoid infinite loop
+                    System.out.println();
+                    System.out.printf("Invalid move. You must remove between %d and %d " +
+                            "stones.\n", MIN_STONES_TO_REMOVE, maxStonesToRemove);
+                    System.out.println();
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                    System.out.println();
                 }
             }
 

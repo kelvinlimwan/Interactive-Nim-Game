@@ -12,7 +12,7 @@ import java.util.Scanner;
 public abstract class NimBaseGame {
 
     // constant
-    protected final int MIN_STONES_TO_REMOVE = 1;
+    protected static final int MIN_STONES_TO_REMOVE = 1;
 
     // instance variables
     private int numStonesLeft;
@@ -44,5 +44,4 @@ public abstract class NimBaseGame {
 
     // launch game playing mode
     public abstract void play(Scanner keyboard);
-
 }

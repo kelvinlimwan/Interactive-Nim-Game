@@ -1,0 +1,35 @@
+Could not read from file!
+Welcome to Nim
+
+Please enter a command to continue or type 'help' for more information
+
+$ Type 'commands' to list all available commands
+Type 'startgame' to play game
+The player that removes the last stone loses!
+
+$ 
+$ The player does not exist.
+
+$ One of the players does not exist.
+
+$ '3' is not a valid command.
+
+$ '1' is not a valid command.
+
+$ '5' is not a valid command.
+
+$ 
+$ One of the players does not exist.
+
+$ '12' is not a valid command.
+
+$ '1' is not a valid command.
+
+$ '2' is not a valid command.
+
+$ '4' is not a valid command.
+
+$ '1' is not a valid command.
+
+$ 
+$ 

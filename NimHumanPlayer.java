@@ -7,33 +7,19 @@
     CANVAS USERNAME: KELVINL3
 */
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 public class NimHumanPlayer extends NimPlayer {
 
-    // instance variables
-    private int remove;
-    private int position;
-
-    // constructors
+    // constructor
     public NimHumanPlayer(String username, String familyname, String givenname) {
         super(username, familyname, givenname);
-        remove = 0;
-    }
-
-    // setters
-    public void setRemove(int remove) {
-        this.remove = remove;
-    }
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     @Override
-    public int removeStone() {
-        return remove;
-    }
-
-    @Override
-    public String advancedMove(boolean[] available, String lastMove){
-        return position + " " + remove;
+    public int removeStone(int numStonesLeft, int maxStonesToRemove, Scanner keyboard) throws
+            InputMismatchException {
+        return keyboard.nextInt();
     }
 }

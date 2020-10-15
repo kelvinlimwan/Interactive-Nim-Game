@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 public class NimAdvancedGame extends NimBaseGame {
 
     // constants
-    private final int SMALLEST_POSITION = 1;
-    private final int MAX_STONES_TO_REMOVE = 2;
+    private static final int SMALLEST_POSITION = 1;
+    private static final int UPPER_BOUND = 2;
 
     // instance variables
     private int initNumStones;
@@ -61,7 +61,7 @@ public class NimAdvancedGame extends NimBaseGame {
                 System.out.print(getNumStonesLeft() + " stones left:");
                 for (int i = 1; i <= initNumStones; i++) {
                     String stone = "*";
-                    if (!available[i-1]) {
+                    if (!available[i - 1]) {
                         stone = "x";
                     }
                     System.out.printf(" <%d,%s>", i, stone);
@@ -70,71 +70,56 @@ public class NimAdvancedGame extends NimBaseGame {
 
                 System.out.println(currentPlayer.getGivennname() + "'s turn - which to remove?");
 
-                // when it is an ai's turn
-                if (currentPlayer instanceof NimAIPlayer) {
+                try {
+                    int position = 0;
+                    int numRemove = 0;
 
-                    lastMove = currentPlayer.advancedMove(available, lastMove);
-
-                    StringTokenizer move = new StringTokenizer(lastMove);
-                    int position = Integer.parseInt(move.nextToken());
-                    int numToRemove = Integer.parseInt(move.nextToken());
-
-                    // update boolean array
-                    for (int i = 1; i <= numToRemove; i++) {
-                        available[position+i-2] = false;
-                    }
-
-                    setNumStonesLeft(getNumStonesLeft() - numToRemove);
-                    break;
-
-                // when it is a human's turn
-                } else if (currentPlayer instanceof NimHumanPlayer) {
-
-                    try {
-                        ((NimHumanPlayer) currentPlayer).setPosition(keyboard.nextInt());
-                        ((NimHumanPlayer) currentPlayer).setRemove(keyboard.nextInt());
-
-                        lastMove = currentPlayer.advancedMove(available, lastMove);
+                    if (currentPlayer instanceof NimAIPlayer) {
+                        lastMove = ((NimAIPlayer) currentPlayer).advancedMove(available, lastMove);
 
                         StringTokenizer move = new StringTokenizer(lastMove);
-                        int position = Integer.parseInt(move.nextToken());
-                        int numToRemove = Integer.parseInt(move.nextToken());
+                        position = Integer.parseInt(move.nextToken());
+                        numRemove = Integer.parseInt(move.nextToken());
+
+                    } else if (currentPlayer instanceof NimHumanPlayer) {
+                        position = Integer.parseInt(keyboard.next());
+                        numRemove = Integer.parseInt(keyboard.next());
+
+                        lastMove = position + " " + numRemove;
 
                         // throw exceptions for invalid position or number of stones prompted
                         if (position < SMALLEST_POSITION || position > initNumStones) {
                             throw new Exception("Invalid move.");
-                        } else if (numToRemove != MIN_STONES_TO_REMOVE &&
-                                numToRemove != MAX_STONES_TO_REMOVE) {
+                        } else if (numRemove != MIN_STONES_TO_REMOVE && numRemove != UPPER_BOUND) {
                             throw new Exception("Invalid move.");
-                        } else if (position == initNumStones &&
-                                numToRemove == MAX_STONES_TO_REMOVE) {
+                        } else if (position == initNumStones && numRemove == UPPER_BOUND) {
                             throw new Exception("Invalid move.");
                         } else {
-                            for (int i = 1; i <= numToRemove; i++) {
-                               if (!available[position+i-2]) {
-                                   throw new Exception("Invalid move.");
-                               }
+                            for (int i = 1; i <= numRemove; i++) {
+                                if (!available[position + i - 2]) {
+                                    throw new Exception("Invalid move.");
+                                }
                             }
                         }
-
-                        // update boolean array
-                        for (int i = 1; i <= numToRemove; i++) {
-                            available[position+i-2] = false;
-                        }
-
-                        setNumStonesLeft(getNumStonesLeft() - numToRemove);
-                        break;
-
-                    } catch (InputMismatchException e) {
-                        keyboard.nextLine(); // to avoid infinite loop
-                        System.out.println();
-                        System.out.println("Invalid move.");
-                        System.out.println();
-                    } catch (Exception e) {
-                        System.out.println();
-                        System.out.println(e.getMessage());
-                        System.out.println();
                     }
+
+                    // update boolean array
+                    for (int i = 1; i <= numRemove; i++) {
+                        available[position + i - 2] = false;
+                    }
+
+                    setNumStonesLeft(getNumStonesLeft() - numRemove);
+                    break;
+
+                } catch (InputMismatchException e) {
+                    keyboard.nextLine(); // to avoid infinite loop
+                    System.out.println();
+                    System.out.println("Invalid move.");
+                    System.out.println();
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                    System.out.println();
                 }
             }
 
